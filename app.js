@@ -162,7 +162,7 @@ io.on('connection', function(socket) {
     console.log('Socket disconnected');
   });
 
-  socket.on('accesstoken', function(data) {
+  socket.on('faceboklogin', function(data) {
     console.log('received accesstoken: ', data);
     request = require('request');
     var profile;

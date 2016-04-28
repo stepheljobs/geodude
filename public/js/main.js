@@ -17,7 +17,7 @@ $(document).ready(function() {
   $('#sendAccessToken').click(function(){
     console.log('sendAccessToken click');
     var atoken = $('#inputAccessToken').val();
-    socket.emit('accesstoken', { token: atoken });
+    socket.emit('faceboklogin', { token: atoken });
     // $('#inputAccessToken').val('');
   });
 
