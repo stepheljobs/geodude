@@ -360,7 +360,7 @@ exports.getSteam = function(req, res, next) {
 
   var steamId = '76561197982488301';
   var params = { l: 'english', steamid: steamId, key: process.env.STEAM_KEY };
-  
+
   async.parallel({
     playerAchievements: function(done) {
       params.appid = '49520';

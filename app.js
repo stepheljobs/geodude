@@ -7,7 +7,6 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var errorHandler = require('errorhandler');
-var lusca = require('lusca');
 var dotenv = require('dotenv');
 var MongoStore = require('connect-mongo/es5')(session);
 var flash = require('express-flash');
@@ -18,7 +17,7 @@ var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 var multer = require('multer');
 var upload = multer({ dest: path.join(__dirname, 'uploads') });
-
+var request;
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  *
@@ -84,15 +83,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(function(req, res, next) {
-  if (req.path === '/api/upload') {
-    next();
-  } else {
-    lusca.csrf()(req, res, next);
-  }
-});
-app.use(lusca.xframe('SAMEORIGIN'));
-app.use(lusca.xssProtection(true));
-app.use(function(req, res, next) {
   res.locals.user = req.user;
   next();
 });
@@ -140,11 +130,11 @@ app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 /**
  * OAuth authentication routes. (Sign in)
  */
-
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
 });
+
 
 /**
  * Error Handler.
@@ -163,10 +153,31 @@ module.exports = app;
 
 io.on('connection', function(socket) {
   socket.emit('greet', { hello: 'Hey there browser!' });
+
   socket.on('respond', function(data) {
     console.log(data);
   });
+
   socket.on('disconnect', function() {
     console.log('Socket disconnected');
+  });
+
+  socket.on('accesstoken', function(data) {
+    console.log('received accesstoken: ', data);
+    request = require('request');
+    var profile;
+
+    request.get('https://graph.facebook.com/me?access_token='+data.token, function(err, request, body) {
+      profile = JSON.parse(body);
+    });
+
+    setTimeout(function(){
+      console.log('call the profile here: ', profile.id);
+      request.get('https://graph.facebook.com/'+ profile.id +'/?fields=first_name,last_name,email,picture&access_token=' + data.token, function(err, request, user) {
+        socket.emit('response', { code: '200', payload: JSON.parse(user), message: 'success' });
+      });
+    },1000);
+
+
   });
 });
