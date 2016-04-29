@@ -3,26 +3,16 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
+  id: String,
   email: { type: String, unique: true },
   password: String,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-
-  facebook: String,
-  twitter: String,
-  google: String,
-  github: String,
-  instagram: String,
-  linkedin: String,
-  steam: String,
-  tokens: Array,
-
+  // passwordResetToken: String,
+  // passwordResetExpires: Date,
+  facebookid: String,
   profile: {
-    name: { type: String, default: '' },
-    gender: { type: String, default: '' },
-    location: { type: String, default: '' },
-    website: { type: String, default: '' },
-    picture: { type: String, default: '' }
+    firstname: { type: String, default: '' },
+    lastname: { type: String, default: '' },
+    photo: { type: String, default: '' }
   }
 }, { timestamps: true });
 

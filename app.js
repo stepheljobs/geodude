@@ -32,6 +32,7 @@ var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
+var authController = require('./controllers/authentication');
 
 /**
  * API keys and Passport configuration.
@@ -163,21 +164,18 @@ io.on('connection', function(socket) {
   });
 
   socket.on('faceboklogin', function(data) {
-    console.log('received accesstoken: ', data);
     request = require('request');
     var profile;
 
-    request.get('https://graph.facebook.com/me?access_token='+data.token, function(err, request, body) {
-      profile = JSON.parse(body);
+    request.get('https://graph.facebook.com/me?fields=first_name,last_name,email,picture&access_token='+data.token, function(err, request, result) {
+      profile = JSON.parse(result);
+      if(profile.error){
+        socket.emit('response', { code: '404', payload: {}, message: profile.error.message });
+      }else{
+        authController.facebookSignup(profile);
+        socket.emit('response', { code: '200', payload: profile, message: 'success' });
+      }
     });
-
-    setTimeout(function(){
-      console.log('call the profile here: ', profile.id);
-      request.get('https://graph.facebook.com/'+ profile.id +'/?fields=first_name,last_name,email,picture&access_token=' + data.token, function(err, request, user) {
-        socket.emit('response', { code: '200', payload: JSON.parse(user), message: 'success' });
-      });
-    },1000);
-
 
   });
 });
