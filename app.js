@@ -7,9 +7,8 @@ echo.on('connection', function(conn) {
     console.log('conn: ', conn);
 
     conn.on('data', function(message) {
-
+        console.log('message: ', message);
         var data = JSON.parse(message);
-        console.log(data.payload.token);
         var profile;
 
         request.get('https://graph.facebook.com/me?fields=first_name,last_name,email,picture&access_token='+ data.payload.token, function(err, request, result) {
