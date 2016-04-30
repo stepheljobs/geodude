@@ -36,6 +36,7 @@
     "node-foursquare": "^0.3.0",
     "node-linkedin": "^0.5.3",
     "node-sass-middleware": "^0.9.8",
+    "node-static": "^0.7.7",
     "nodemailer": "^2.3.2",
     "passport": "0.3.2",
     "passport-facebook": "^2.1.0",
@@ -44,6 +45,7 @@
     "randomstring": "^1.1.4",
     "request": "^2.72.0",
     "socket.io": "^1.4.5",
+    "sockjs": "^0.3.16",
     "twit": "^2.2.3",
     "validator": "^5.2.0",
     "yui": "^3.18.1"
