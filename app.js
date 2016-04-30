@@ -4,8 +4,7 @@ request = require('request');
 
 var echo = sockjs.createServer({ sockjs_url: 'http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js' });
 echo.on('connection', function(conn) {
-    console.log('conn: ', conn);
-
+  
     conn.on('data', function(message) {
         console.log('message: ', message);
         var data = JSON.parse(message);
