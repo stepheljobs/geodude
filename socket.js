@@ -21,7 +21,7 @@ function Socket(conn) {
       switch (req.route.module) {
         case "auth":
           authController(req, function(status,data){
-            var response = { "response" : { "code": status, route: {"module": req.route.module, "action": "" } "payload": data } }
+            var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
             conn.write(JSON.stringify(response));
           });
           break;
