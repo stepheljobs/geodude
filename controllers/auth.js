@@ -4,7 +4,6 @@ var Redis = require('ioredis');
 var socket = require('./../socket');
 var request = require('request');
 var randomstring = require('randomstring');
-var bcrypt = require('bcrypt');
 
 
 function Auth(req, cb) {
@@ -21,7 +20,7 @@ function Auth(req, cb) {
         cb("invalid", profile.error.message);
       } else {
 
-        db.get("st-user."+profile.email, function(err, id){
+        db.get(profile.email, function(err, id){
           console.log('id: ', id);
           if(id){ // Login
             console.log('User exist, user will logged in.');
@@ -41,8 +40,8 @@ function Auth(req, cb) {
               photo: profile.picture.data.url || ''
             }
 
-            db.set("st-user."+profile.email, userProfile.id);
-            db.hmset("hm-user."+userProfile.id, userProfile);
+            db.set(profile.email, userProfile.id);
+            db.hmset(userProfile.id, userProfile);
             cb("success",userProfile);
           }
         });
@@ -52,26 +51,23 @@ function Auth(req, cb) {
       break;
     case 'login':
 
+    
+
       break;
     case 'signup':
-        console.log('manual signup start');
+        console.log('');
         var userProfile = {
           id: randomstring.generate(8),
           member_since: Date.now(),
           email: req.payload.email,
-          password: bcrypt.hashSync(req.payload.password, bcrypt.genSaltSync(10)),
           first_name: req.payload.first_name,
           last_name: req.payload.last_name || '',
           photo: ''
         }
 
-        req.payload.assert('email', 'Email is not valid').isEmail();
-        req.payload.assert('password', 'Password cannot be blank').notEmpty();
-        req.payload.sanitize('email').normalizeEmail();
-
-        db.set("st-user."+req.payload.email, userProfile.id);
-        db.hmset("hm-user."+userProfile.id, userProfile);
-        cb("success", userProfile);
+        db.set(req.payload.email, userProfile.id);
+        db.hmset(userProfile.id, userProfile);
+        cb("success",userProfile);
       break;
     default:
   }
@@ -79,6 +75,3 @@ function Auth(req, cb) {
 }
 
 module.exports = Auth;
-
-
-// {"route": { "module":"auth", "action": "signup" } , "payload": {"email": "stephel2@gmail.com", "first_name": "stephel2", "last_name": "Maca", "photo": ""}}
