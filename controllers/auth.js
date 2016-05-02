@@ -24,7 +24,7 @@ function Auth(req, cb) {
           console.log('id: ', id);
           if(id){ // Login
             console.log('User exist, user will logged in.');
-            db.hgetall(id, function(err, user) {
+            db.hgetall("hm-user."+id, function(err, user) {
               console.log('user: ', JSON.stringify(user));
               cb("success", user);
             });
