@@ -4,6 +4,7 @@ var Redis = require('ioredis');
 var socket = require('./../socket');
 var request = require('request');
 var randomstring = require('randomstring');
+var bcrypt = require('bcrypt');
 
 
 function Auth(req, cb) {
@@ -20,7 +21,7 @@ function Auth(req, cb) {
         cb("invalid", profile.error.message);
       } else {
 
-        db.get(profile.email, function(err, id){
+        db.get("st-user."+profile.email, function(err, id){
           console.log('id: ', id);
           if(id){ // Login
             console.log('User exist, user will logged in.');
@@ -40,8 +41,8 @@ function Auth(req, cb) {
               photo: profile.picture.data.url || ''
             }
 
-            db.set(profile.email, userProfile.id);
-            db.hmset(userProfile.id, userProfile);
+            db.set("st-user."+profile.email, userProfile.id);
+            db.hmset("hm-user."+userProfile.id, userProfile);
             cb("success",userProfile);
           }
         });
