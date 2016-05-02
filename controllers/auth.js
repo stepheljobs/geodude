@@ -51,6 +51,32 @@ function Auth(req, cb) {
 
       break;
     case 'login':
+        console.log('manual login start');
+
+        if(req.payload.email) {
+          if(req.payload.password) {
+            db.get("st-user."+req.payload.email, function(err, id){
+              if(id){
+                db.hgetall("hm-user."+id, function(err, user) {
+                  bcrypt.compare(req.payload.password, user.password, function(err, res) {
+                    console.log(res);
+                    if(res){
+                      cb("success", "User logged in");
+                    }else{
+                      cb("invalid", "Password did not match");
+                    }
+                  });
+                });
+              }else{
+                cb("invalid", "User does not have account.");
+              }
+            });
+          }else{
+            cb("invalid", "Invalid/Empty Password");
+          }
+        }else{
+          cb("invalid", "Invalid/Empty Email");
+        }
 
       break;
     case 'signup':
