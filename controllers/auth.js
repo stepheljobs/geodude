@@ -1,11 +1,10 @@
 'use strict';
 
 var Redis = require('ioredis');
-var socket = require('./../socket');
 var request = require('request');
 var randomstring = require('randomstring');
 var bcrypt = require('bcrypt');
-
+var psubLocation = require('../service/psubLocation');
 
 function Auth(req, cb) {
 
@@ -52,16 +51,20 @@ function Auth(req, cb) {
       break;
     case 'login':
         console.log('manual login start');
-
         if(req.payload.email) {
           if(req.payload.password) {
             db.get("st-user."+req.payload.email, function(err, id){
               if(id){
                 db.hgetall("hm-user."+id, function(err, user) {
+                  // list areas here
                   bcrypt.compare(req.payload.password, user.password, function(err, res) {
-                    console.log(res);
                     if(res){
-                      cb("success", "User logged in");
+                      cb("success", { id: id, message: "User logged in" });
+                        // use areas here
+                        var areaArray = user.area_listings.split(",");
+                        areaArray.map(function(loc){
+                          psubLocation(loc);
+                        });
                     }else{
                       cb("invalid", "Password did not match");
                     }
@@ -83,9 +86,10 @@ function Auth(req, cb) {
         console.log('manual signup start');
 
         if(req.payload.email) {
-          if(req.payload.first_name){
-            if(req.payload.last_name){
-              if(req.payload.password){
+          if(req.payload.first_name) {
+            if(req.payload.last_name) {
+              if(req.payload.user_type) {
+                if(req.payload.password) {
 
                 var userProfile = {
                   id: randomstring.generate(8),
@@ -94,21 +98,24 @@ function Auth(req, cb) {
                   password: bcrypt.hashSync(req.payload.password, bcrypt.genSaltSync(10)),
                   first_name: req.payload.first_name,
                   last_name: req.payload.last_name || '',
+                  user_type: req.payload.user_type || 'CLIENT',
                   photo: ''
                 }
 
                 db.get("st-user."+req.payload.email, function(err, id){
                   if(id){
-                    cb("invalid", "User already have account.");
+                    cb("invalid", "Account duplicate.");
                   }else{
                     db.set("st-user."+req.payload.email, userProfile.id);
                     db.hmset("hm-user."+userProfile.id, userProfile);
                     cb("success", userProfile);
                   }
                 });
-
+                }else{
+                  cb("invalid", "Invalid/Empty Password");
+                }
               }else{
-                cb("invalid", "Invalid/Empty Password");
+                cb("invalid", "Invalid/Empty User Type");
               }
             }else{
               cb("invalid", "Invalid/Empty Last Name");

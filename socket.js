@@ -4,6 +4,7 @@ var request = require('request');
 var socket = require('./socket');
 
 var authController = require('./controllers/auth');
+var requestController = require('./controllers/request');
 
 function Socket(conn) {
   if (!conn) {
@@ -26,6 +27,13 @@ function Socket(conn) {
             conn.write(JSON.stringify(response));
           });
           break;
+          case "request":
+            requestController(req, function(status,data){
+              var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
+              console.log('response: ', JSON.stringify(response));
+              conn.write(JSON.stringify(response));
+            });
+            break;
         default:
       }
 
