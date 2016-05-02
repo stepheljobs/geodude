@@ -18,7 +18,7 @@ function Socket(conn) {
       console.log('message: ', message);
       var req = JSON.parse(message);
 
-      switch (req.route.module) {
+      switch (req.respose.route.module) {
         case "auth":
           authController(req, function(status,data){
             var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
