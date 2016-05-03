@@ -38,7 +38,7 @@ function Request(req, cb) {
         cb("success", { content: data });
       });
       break;
-    case 'create': // {"route": { "module":"request", "action": "create" } , "payload": { "id": "userid", "country": "country", "area": "area", "ptype": "ptype", "rentorbuy": "rentorbuy", "budget": "budget"}}
+    case 'create': // {"route": { "module":"request", "action": "create" } , "payload": { "id": "userid", "country": "country", "area": "area", "ptype": "ptype", "rentorbuy": "rentorbuy", "budget": "budget", "add_info": "add_info"}}
 
       if(req.payload.id){
         if(req.payload.country){
@@ -55,6 +55,7 @@ function Request(req, cb) {
                     ptype: req.payload.ptype,
                     rentorbuy: req.payload.rentorbuy,
                     budget: req.payload.budget,
+                    add_info: req.payload.add_info,
                     created: Date.now()
                   }
 
