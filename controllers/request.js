@@ -61,7 +61,10 @@ function Request(req, cb) {
 
                   db.set("st-req."+req.payload.id, requestCreated.id);
                   db.hmset("hm-req."+requestCreated.id, requestCreated);
-
+                  db.hgetall("hm-req."+requestCreated.id, function(err, data) {
+                    console.log("request data sent to brokers...");
+                    cb("success", { content: data });
+                  });
 
                 }else{
                   cb("incomplete", { message: "No budget data." });
