@@ -4,7 +4,7 @@ var Redis = require('ioredis');
 var request = require('request');
 var randomstring = require('randomstring');
 var bcrypt = require('bcrypt');
-var psubLocation = require('../service/psubLocation');
+var psubLocation = require('../service/psublocation');
 
 function Auth(req, cb) {
 
