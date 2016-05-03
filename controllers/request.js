@@ -12,8 +12,8 @@ function Request(req, cb) {
     var areaArray = ["Fort Bonifacio", "Makati", "Ortigas", "Paranaque", "Alabang", "Mandaluyong"];
     var ptypeArray = ["3+ Bedrooms Condo", "2 Bedrooms Condo", "House and Lot", "Office Space", "Studio/ 1 Bedroom Condo", "Townhouse", "Commercial Space", "Other"];
     var rentorbuyArray = ["I want to Rent", "I want to buy"];
-    var rentprice = ['PHP 0 - 20,000', 'PHP 21,000 - 35,000', 'PHP 36,000 - 50,000', 'PHP 51,000 - 75,000', 'PHP 76,000 - 100,000', 'PHP 101,000 - 150,000', 'PHP 151,000 - 250,000', 'PHP > 251,000'];
-    var buyprice = ['PHP 0 - 2,000,000', 'PHP 2,000,000 - 3,000,000', 'PHP 3,000,000 - 5,000,000', 'PHP 5,000,000 - 10,000,000', 'PHP 10,000,000 - 20,000,000', 'PHP > 50,000,000', 'PHP 20,000,000 - 50,000,000'];
+    var rentprice = 'PHP 0 - 20,000 . PHP 21,000 - 35,000 . PHP 36,000 - 50,000 . PHP 51,000 - 75,000 . PHP 76,000 - 100,000 . PHP 101,000 - 150,000 . PHP 151,000 - 250,000 . PHP > 251,000';
+    var buyprice = 'PHP 0 - 2,000,000 . PHP 2,000,000 - 3,000,000 . PHP 3,000,000 - 5,000,000 . PHP 5,000,000 - 10,000,000 . PHP 10,000,000 - 20,000,000 . PHP > 50,000,000 . PHP 20,000,000 - 50,000,000';
     var commonprice = "Undecided";
 
       var content = {
