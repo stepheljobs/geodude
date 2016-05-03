@@ -31,7 +31,7 @@ var app = express();
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('view engine', 'html');
 app.use(compress());
 app.use(sass({
   src: path.join(__dirname, 'public'),
@@ -51,8 +51,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-app.get('/', homeController.index);
+app.use(express.static(path.join(__dirname, 'views'), { maxAge: 31557600000 }));
+// app.get('/', homeController.index);
 app.use(errorHandler());
 
 var server = http.createServer(app).listen(3000, function(){
