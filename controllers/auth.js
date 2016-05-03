@@ -27,6 +27,14 @@ function Auth(req, cb) {
             db.hgetall("hm-user."+id, function(err, user) {
               console.log('user: ', JSON.stringify(user));
               cb("success", user);
+
+              if (user.user_type === "BROKER") {
+                // subscribe to a location.
+                var areas = user.cover_areas.split(",");
+                areas.map(function(area){
+                  psubLocation(area);
+                });
+              }
             });
           }else{ // Signup
             console.log('User does not exist, user will signup.');
@@ -42,7 +50,21 @@ function Auth(req, cb) {
 
             db.set("st-user."+profile.email, userProfile.id);
             db.hmset("hm-user."+userProfile.id, userProfile);
-            cb("success",userProfile);
+
+            //check if registered.
+            db.hgetall("hm-user."+userProfile.id, function(err, user) {
+              console.log('user: ', JSON.stringify(user));
+              cb("success", userProfile);
+
+              //subscribe part after register
+              if(user.user_type === "BROKER"){
+                // subscribe to a location.
+                var areas = user.cover_areas.split(",");
+                areas.map(function(area){
+                  psubLocation(area);
+                });
+              }
+            });
           }
         });
       }
