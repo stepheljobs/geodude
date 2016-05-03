@@ -8,6 +8,16 @@ function PsubLocation(location) {
     console.log("count: ", count);
     console.log("err: ", err);
   });
+  sub.on('pmessage', function (pattern, channel, message) {
+    console.log('sub pattern: ', pattern);
+    console.log('sub channel: ', channel);
+    console.log('sub message: ', message);
+  });
+  sub.on('pmessageBuffer', function (pattern, channel, message) {
+    console.log('sub pattern: ', pattern);
+    console.log('sub channel: ', channel);
+    console.log('sub message: ', message);
+  });
 }
 
 module.exports = PsubLocation;
