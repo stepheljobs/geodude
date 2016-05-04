@@ -26,7 +26,7 @@ function Socket(conn) {
           case "auth":
             authController(req, function(status,data){
               if(status === "broadcast"){
-                var bcast = { "broadcast" : { payload: data } }
+                var bcast = { "broadcast" : { route: {"module": "request", "action": "broadcast" }, "payload": data } }
                 console.log('broadcast: ', JSON.stringify(bcast));
                 conn.write(JSON.stringify(bcast));
               }else{
@@ -45,6 +45,13 @@ function Socket(conn) {
               break;
             case "user":
               userController(req, function(status,data){
+                var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
+                console.log('response: ', JSON.stringify(response));
+                conn.write(JSON.stringify(response));
+              });
+              break;
+            case "match":
+              matchController(req, function(status,data){
                 var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
                 console.log('response: ', JSON.stringify(response));
                 conn.write(JSON.stringify(response));
