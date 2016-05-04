@@ -1,10 +1,11 @@
 <!doctype html>
-<html><head>
+<html>
+<head>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="http://cdn.jsdelivr.net/sockjs/1.0.1/sockjs.min.js"></script>
     <style>
       .box {
-          width: 300px;
+          width: 600px;
           float: left;
           margin: 0 20px 0 20px;
       }
@@ -31,23 +32,29 @@
           background-color: #F0F0F0;
           font-family: "Arial";
       }
+
     </style>
 </head><body lang="en">
-    <h1>SockJS Echo example</h1>
+    <h1>Get.Place Broker Sample</h1>
+
+    <p>{"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker2@gmail.com", "password": "broker2"}}</p>
+    <p>{"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker3@gmail.com", "password": "broker3"}}</p>
 
     <div id="first" class="box">
       <div></div>
-      <form><input autocomplete="off" value="Type here..."></input></form>
+      <input autocomplete="off" value=""></input>
+      <button id="sendbtn" class="btn default">Send</button>
     </div>
 
     <script>
-        var sockjs_url = '/echo';
+        var sockjs_url = 'http://localhost:3000/echo';
         var sockjs = new SockJS(sockjs_url);
         $('#first input').focus();
 
         var div  = $('#first div');
         var inp  = $('#first input');
-        var form = $('#first form');
+        var sendbtn = $('#sendbtn');
+
 
         var print = function(m, p) {
             p = (p === undefined) ? '' : JSON.stringify(p);
@@ -57,14 +64,13 @@
         };
 
         sockjs.onopen    = function()  {print('[*] open', sockjs.protocol);};
-        sockjs.onmessage = function(e) {print('[.] message', e.data);};
+        sockjs.onmessage = function(e) { print('[.] message', e.data); };
         sockjs.onclose   = function()  {print('[*] close');};
 
-        form.submit(function() {
-            print('[ ] sending', inp.val());
-            sockjs.send(inp.val());
-            inp.val('');
-            return false;
+        sendbtn.click(function(){
+          print('[ ] sending', inp.val());
+          sockjs.send(inp.val());
+          inp.val('');
         });
 
     </script>
