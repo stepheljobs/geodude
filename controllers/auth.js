@@ -34,7 +34,7 @@ function Auth(req, cb) {
                   var areas = user.cover_areas.split(",");
                   areas.map(function(area){
                     psubLocation(area, function(broadcast){
-                      // console.log("data is now on auth: ", callback);
+                      cb("success", broadcast);
                     });
                   });
                 }
