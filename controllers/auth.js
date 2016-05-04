@@ -125,7 +125,7 @@ function Auth(req, cb) {
         }
 
       break;
-    case 'signup':
+    case 'signup': // {"route": { "module":"auth", "action": "signup" } , "payload": { "email": "broker2@gmail.com", "first_name": "broker2", "last_name": "broker2", "user_type": "BROKER", "password": "broker2"}}
         console.log('manual signup start');
 
         if(req.payload.email) {
