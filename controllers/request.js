@@ -1,6 +1,7 @@
 'use strict';
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
+var pubLocation = require('../service/publocation');
 
 function Request(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -64,6 +65,7 @@ function Request(req, cb) {
                   db.hgetall("hm-req."+requestCreated.id, function(err, data) {
                     console.log("request data sent to brokers...");
                     cb("success", { content: data });
+                    pubLocation(data.id, data.area, data);
                   });
 
                 }else{
