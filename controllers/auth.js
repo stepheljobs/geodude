@@ -30,10 +30,14 @@ function Auth(req, cb) {
 
               if (user.user_type === "BROKER") {
                 // subscribe to a location.
-                var areas = user.cover_areas.split(",");
-                areas.map(function(area){
-                  psubLocation(area);
-                });
+                if(cover_areas){
+                  var areas = user.cover_areas.split(",");
+                  areas.map(function(area){
+                    psubLocation(area, function(broadcast){
+                      // console.log("data is now on auth: ", callback);
+                    });
+                  });
+                }
               }
             });
           }else{ // Signup
@@ -61,7 +65,9 @@ function Auth(req, cb) {
                 // subscribe to a location.
                 var areas = user.cover_areas.split(",");
                 areas.map(function(area){
-                  psubLocation(area);
+                  psubLocation(area, function(result){
+                    cb("success", result);
+                  });
                 });
               }
             });
@@ -81,15 +87,6 @@ function Auth(req, cb) {
                   // compare password
                   bcrypt.compare(req.payload.password, user.password, function(err, res) {
                     if(res){
-                        // use areas here
-                        if(user.cover_areas){
-                          var areaArray = user.cover_areas.split(",");
-                          areaArray.map(function(loc){
-                            psubLocation(loc, function(broadcast){
-                              cb("success", broadcast);
-                            });
-                          });
-                        }
 
                         if(user.user_type === "CLIENT"){
                           // detect if there is request from this user.
@@ -100,12 +97,23 @@ function Auth(req, cb) {
                               cb("success", { id: id, message: "User logged in", requestexist: false });
                             }
                           });
-                        }else{
+
+                        }else{ //BROKER
                           // detect if there is a broker profile.
                           if(user.working_email){
                             cb("success", { id: id, message: "User logged in", brokerprofile: true });
                           }else{
                             cb("success", { id: id, message: "User logged in", brokerprofile: false });
+                          }
+
+                          // broker subscribe to their own areas.
+                          if(user.cover_areas){
+                            var areaArray = user.cover_areas.split(",");
+                            areaArray.map(function(loc){
+                              psubLocation(loc, function(broadcast){
+                                cb("broadcast", broadcast);
+                              });
+                            });
                           }
                         }
                     }else{
