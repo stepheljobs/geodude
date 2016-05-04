@@ -71,22 +71,43 @@ function Auth(req, cb) {
     });
 
       break;
-    case 'login':
+    case 'login': // {"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker2@gmail.com", "password": "broker2"}}
         console.log('manual login start');
         if(req.payload.email) {
           if(req.payload.password) {
             db.get("st-user."+req.payload.email, function(err, id){
               if(id){
                 db.hgetall("hm-user."+id, function(err, user) {
-                  // list areas here
+                  // compare password
                   bcrypt.compare(req.payload.password, user.password, function(err, res) {
                     if(res){
-                      cb("success", { id: id, message: "User logged in" });
                         // use areas here
-                        var areaArray = user.area_listings.split(",");
-                        areaArray.map(function(loc){
-                          psubLocation(loc);
-                        });
+                        if(user.cover_areas){
+                          var areaArray = user.cover_areas.split(",");
+                          areaArray.map(function(loc){
+                            psubLocation(loc, function(broadcast){
+                              cb("success", broadcast);
+                            });
+                          });
+                        }
+
+                        if(user.user_type === "CLIENT"){
+                          // detect if there is request from this user.
+                          db.get("st-req."+user.id, function (err, result) {
+                            if(result){
+                              cb("success", { id: id, message: "User logged in", requestexist: true });
+                            }else{
+                              cb("success", { id: id, message: "User logged in", requestexist: false });
+                            }
+                          });
+                        }else{
+                          // detect if there is a broker profile.
+                          if(user.working_email){
+                            cb("success", { id: id, message: "User logged in", brokerprofile: true });
+                          }else{
+                            cb("success", { id: id, message: "User logged in", brokerprofile: false });
+                          }
+                        }
                     }else{
                       cb("invalid", "Password did not match");
                     }
