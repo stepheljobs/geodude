@@ -13,7 +13,7 @@ function PsubLocation(location, cb) {
     console.log('sub pattern: ', pattern);
     console.log('sub channel: ', channel);
     console.log('sub message: ', message);
-    if(callback) cb(message);
+    if(cb) cb(message);
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {
     console.log('sub pattern: ', pattern);
