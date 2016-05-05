@@ -2,7 +2,7 @@
 
 var Redis = require('ioredis');
 
-function PsubLocation(location, callbc) {
+function PsubLocation(location, cb) {
   var sub = new Redis({port: 6379, host: '127.0.0.1'});
   sub.psubscribe('*.'+location, function (err, count) {
     console.log("new user is now subscribed to: ", location);
@@ -13,7 +13,7 @@ function PsubLocation(location, callbc) {
     console.log('sub pattern: ', pattern);
     console.log('sub channel: ', channel);
     console.log('sub message: ', message);
-    callbc(message);
+    if(callback) cb(message);
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {
     console.log('sub pattern: ', pattern);
