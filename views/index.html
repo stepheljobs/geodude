@@ -39,21 +39,25 @@
 
     <p>{"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker2@gmail.com", "password": "broker2"}}</p>
     <p>{"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker3@gmail.com", "password": "broker3"}}</p>
+    <p>{"route": { "module":"auth", "action": "login" } , "payload": { "email": "client2@gmail.com", "password": "client2"}}</p>
 
     <div id="first" class="box">
       <div></div>
       <input autocomplete="off" value=""></input>
       <button id="sendbtn" class="btn default">Send</button>
+      <button id="clearbtn" class="btn default">Clear</button>
     </div>
 
     <script>
-        var sockjs_url = 'http://get.place:3000/echo';
+        // var sockjs_url = 'http://get.place:3000/echo';
+        var sockjs_url = 'http://localhost:3000/echo';
         var sockjs = new SockJS(sockjs_url);
         $('#first input').focus();
 
         var div  = $('#first div');
         var inp  = $('#first input');
         var sendbtn = $('#sendbtn');
+        var clearbtn = $('#clearbtn');
 
 
         var print = function(m, p) {
@@ -71,6 +75,10 @@
           print('[ ] sending', inp.val());
           sockjs.send(inp.val());
           inp.val('');
+        });
+
+        clearbtn.click(function(){
+          div.empty();
         });
 
     </script>

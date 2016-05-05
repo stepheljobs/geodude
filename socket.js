@@ -6,6 +6,7 @@ var socket = require('./socket');
 var authController = require('./controllers/auth');
 var requestController = require('./controllers/request');
 var userController = require('./controllers/users');
+var matchController = require('./controllers/match');
 
 function Socket(conn) {
   if (!conn) {

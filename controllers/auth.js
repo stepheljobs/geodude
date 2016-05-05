@@ -5,7 +5,7 @@ var request = require('request');
 var randomstring = require('randomstring');
 var bcrypt = require('bcrypt');
 var psubLocation = require('../service/psublocation');
-
+var psubRequest = require('../service/psubrequest');
 function Auth(req, cb) {
 
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -38,6 +38,23 @@ function Auth(req, cb) {
                     });
                   });
                 }
+              }else{
+
+                // detect if there is request from this user.
+                db.get("st-req."+id, function (err, myrequestid) {
+                  if(myrequestid){
+                    console.log('what the heck is this result:> ', result);
+                    cb("success", { id: id, message: "User logged in", requestexist: true });
+
+                    //subscribe to your own request.
+                    // paramater myid, requestid, callback
+                    psubRequest(id, myrequestid, function(broadcast){
+                      cb("broadcast", broadcast);
+                    });
+                  }else{
+                    cb("success", { id: id, message: "User logged in", requestexist: false });
+                  }
+                });
               }
             });
           }else{ // Signup
@@ -90,9 +107,15 @@ function Auth(req, cb) {
 
                         if(user.user_type === "CLIENT"){
                           // detect if there is request from this user.
-                          db.get("st-req."+user.id, function (err, result) {
-                            if(result){
+                          db.get("st-req."+user.id, function (err, requestid) {
+                            if(requestid){
                               cb("success", { id: id, message: "User logged in", requestexist: true });
+                              
+                              //subscribe to your own request.
+                              // paramater myid, requestid, callback
+                              psubRequest(id, requestid, function(broadcast){
+                                cb("broadcast", broadcast);
+                              });
                             }else{
                               cb("success", { id: id, message: "User logged in", requestexist: false });
                             }
