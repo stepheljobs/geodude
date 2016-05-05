@@ -2,6 +2,7 @@
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
 var pubLocation = require('../service/publocation');
+var fetchAllRequest = require('../service/fetchallrequest');
 
 function Request(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -107,6 +108,30 @@ function Request(req, cb) {
         })
       }else{
         cb("invalid", { message: "Invalid/No userid data" });
+      }
+
+      break;
+    case 'fetchallrequest': //use by broker only
+
+      if(req.payload.brokerid){
+
+        var brokerid = req.payload.brokerid;
+
+        db.hgetall("hm-user."+brokerid, function(err, data) {
+          console.log(">>> " + JSON.stringify(data.cover_areas));
+
+          if(data.cover_areas){
+            fetchAllRequest(data.cover_areas, function(err, listofrequest){ //this will fetch all the request match to cover_areas
+              console.log("listofrequest >>> ", listofrequest);
+            });
+          }else{
+            // call back no cover areas.
+          }
+
+
+        });
+      }else{
+        cb("invalid", { message: "No broker id" });
       }
 
       break;
