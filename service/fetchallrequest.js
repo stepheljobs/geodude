@@ -20,7 +20,7 @@ function FetchAllRequest(cover_areas, cb) {
     });
 
     setTimeout(function(){
-      console.log(">>>>> sortedRequest: ", sortedRequest);
+      cb(null,sortedRequest);
     }, 3000);
 
   })
