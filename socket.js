@@ -26,8 +26,8 @@ function Socket(conn) {
         switch (req.route.module) {
           case "auth":
             authController(req, function(status,data){
-              if(status === "broadcast"){
-                var bcast = { "broadcast" : { route: {"module": "request", "action": "broadcast" }, "payload": JSON.parse(data) } }
+              if (status === "broadcast") {
+                var bcast = { "broadcast" : { route: {"module": "request", "action": "broadcast" }, "payload": data } }
                 console.log('broadcast: ', JSON.stringify(bcast));
                 conn.write(JSON.stringify(bcast));
               }else{
