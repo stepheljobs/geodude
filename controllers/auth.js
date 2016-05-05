@@ -33,7 +33,7 @@ function Auth(req, cb) {
                 if(cover_areas){
                   var areas = user.cover_areas.split(",");
                   areas.map(function(area){
-                    psubLocation(area, function(broadcast){
+                    psubLocation(area, function(err, broadcast){
                       cb("success", broadcast);
                     });
                   });
@@ -82,8 +82,8 @@ function Auth(req, cb) {
                 // subscribe to a location.
                 var areas = user.cover_areas.split(",");
                 areas.map(function(area){
-                  psubLocation(area, function(result){
-                    cb("success", result);
+                  psubLocation(area, function(err, broadcast){
+                    cb("success", broadcast);
                   });
                 });
               }
@@ -133,7 +133,7 @@ function Auth(req, cb) {
                           if(user.cover_areas){
                             var areaArray = user.cover_areas.split(",");
                             areaArray.map(function(loc){
-                              psubLocation(loc, function(broadcast){
+                              psubLocation(loc, function(err, broadcast){
                                 cb("broadcast", broadcast);
                               });
                             });
