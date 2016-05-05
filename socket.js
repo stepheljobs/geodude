@@ -29,7 +29,7 @@ function Socket(conn) {
               if(status === "broadcast"){
                 var bcast = { "broadcast" : { route: {"module": "request", "action": "broadcast" }, "payload": data } }
                 console.log('broadcast: ', JSON.stringify(bcast));
-                conn.write(JSON.stringify(bcast));
+                conn.write(bcast);
               }else{
                 var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
                 console.log('response: ', JSON.stringify(response));
