@@ -49,24 +49,32 @@ function Request(req, cb) {
               if(req.payload.rentorbuy){
                 if(req.payload.budget){
 
-                  var requestCreated = {
-                    id: randomstring.generate(8),
-                    userid: req.payload.id,
-                    country: req.payload.country,
-                    area: req.payload.area,
-                    ptype: req.payload.ptype,
-                    rentorbuy: req.payload.rentorbuy,
-                    budget: req.payload.budget,
-                    add_info: req.payload.add_info,
-                    created: Date.now()
-                  }
 
-                  db.set("st-req."+req.payload.id, requestCreated.id);
-                  db.hmset("hm-req."+requestCreated.id, requestCreated);
-                  db.hgetall("hm-req."+requestCreated.id, function(err, data) {
-                    console.log("request data sent to brokers...");
-                    cb("success", { content: data });
-                    pubLocation(data.id, data.area, data);
+                  db.hgetall('hm-user.'+ req.payload.id, function(err, data){
+
+                    var fullname = data.first_name + " " + data.last_name;
+                    var photo = data.photo;
+                    var requestCreated = {
+                      id: randomstring.generate(8),
+                      userid: req.payload.id,
+                      fullname: fullname,
+                      photo: photo,
+                      country: req.payload.country,
+                      area: req.payload.area,
+                      ptype: req.payload.ptype,
+                      rentorbuy: req.payload.rentorbuy,
+                      budget: req.payload.budget,
+                      add_info: req.payload.add_info,
+                      created: Date.now()
+                    }
+
+                    db.set("st-req."+req.payload.id, requestCreated.id);
+                    db.hmset("hm-req."+requestCreated.id, requestCreated);
+                    db.hgetall("hm-req."+requestCreated.id, function(err, data) {
+                      console.log("request data sent to brokers...");
+                      cb("success", { content: data });
+                      pubLocation(data.id, data.area, data);
+                    });
                   });
 
                 }else{

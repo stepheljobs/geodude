@@ -6,9 +6,9 @@ function FetchAllRequest(cover_areas, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
   var sortedRequest = [];
   db.keys('hm-req.*', function(err, requests){
-    // console.log("list of request >>>>> ", requests);
     requests.map(function(singleRequest) {
       db.hgetall(singleRequest, function(err, requestDetail) {
+
         var area = cover_areas.split(",");
         area.map(function(ca){
           if(requestDetail.area.includes(ca)){
