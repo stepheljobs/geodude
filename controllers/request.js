@@ -114,21 +114,16 @@ function Request(req, cb) {
     case 'fetchallrequest': //use by broker only
 
       if(req.payload.brokerid){
-
         var brokerid = req.payload.brokerid;
-
         db.hgetall("hm-user."+brokerid, function(err, data) {
-          console.log(">>> " + JSON.stringify(data.cover_areas));
-
           if(data.cover_areas){
             fetchAllRequest(data.cover_areas, function(err, listofrequest){ //this will fetch all the request match to cover_areas
-              console.log("listofrequest >>> ", listofrequest);
+              cb("success", listofrequest );
             });
           }else{
             // call back no cover areas.
+            cb("invalid", { message: "No cover areas" });
           }
-
-
         });
       }else{
         cb("invalid", { message: "No broker id" });
