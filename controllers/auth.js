@@ -110,7 +110,7 @@ function Auth(req, cb) {
                           db.get("st-req."+user.id, function (err, requestid) {
                             if(requestid){
                               cb("success", { id: id, message: "User logged in", requestexist: true });
-                              
+
                               //subscribe to your own request.
                               // paramater myid, requestid, callback
                               psubRequest(id, requestid, function(broadcast){
@@ -135,30 +135,8 @@ function Auth(req, cb) {
                             areaArray.map(function(loc){
                               psubLocation(loc, function(err, broadcast){
                                 console.log("auth:psublocation >>> ", JSON.parse(broadcast));
-
-                                var request = JSON.parse(broadcast);
-
-                                db.hgetall("hm-user."+request.userid, function(err, client) {
-
-                                  var fullname = client.first_name + " " + client.last_name,
-                                      avatar = client.photo;
-
-                                  var clientCardInfo = {
-                                    requestId: request.id,
-                                    clientId: request.userid,
-                                    fullname: fullname,
-                                    photo: avatar,
-                                    country: request.country,
-                                    areas: request.area,
-                                    ptype: request.ptype,
-                                    rentorbuy: request.rentorbuy,
-                                    budget: request.budget,
-                                    add_info: request.add_info,
-                                    created: request.created,
-                                  }
-
-                                  cb("broadcast", clientCardInfo);
-                                });
+                                  var request = JSON.parse(broadcast);
+                                  cb("broadcast", request);
                               });
                             });
                           }
