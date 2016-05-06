@@ -2,14 +2,15 @@
 
 var Redis = require('ioredis');
 
-function PubRequest(data) {
+function PubRequest(data, cb) {
   var pub = new Redis({port: 6379,host: '127.0.0.1'});
-  var clientid = data.userid;
+  var clientid = data.clientid;
   var requestid = data.requestid;
-  // console.log("==? ", );
-  pub.hgetall("hm-user."+data.userid, function(err, brokerprofile) {
-    console.log('a Broker with id: ', data.userid, 'says i have it to request id: ', data.requestid);
-   pub.publish(clientid+"."+requestid, JSON.stringify(brokerprofile));
+  var brokerid = data.brokerid;
+  pub.hgetall("hm-user."+brokerid, function(err, brokerprofile) {
+   console.log('a broker says i have it to request id: ', requestid);
+   pub.publish(clientid+"."+requestid, JSON.stringify(brokerprofile)); //broadcast to client
+   cb(null, "I have it sent to client.");
   });
 }
 

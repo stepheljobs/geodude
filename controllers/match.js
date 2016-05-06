@@ -8,8 +8,14 @@ function Match(req, cb) {
 
   switch (req.route.action) {
     case 'haveit':
-        console.log('someone says i have it: ', req);
-        pubRequest(req.payload);
+        pubRequest(req.payload, function(err, result){
+          if(result){
+            cb("success", result);
+          }else{
+            cb("error", "No response.");
+          }
+        });
+      break;
       break;
     default:
   }
