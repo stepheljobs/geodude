@@ -68,11 +68,11 @@
         };
 
         sockjs.onopen    = function()  {print('[*] open', sockjs.protocol);};
-        sockjs.onmessage = function(e) { print('[.] message', e.data); };
+        sockjs.onmessage = function(e) { print('[=] message', e.data); };
         sockjs.onclose   = function()  {print('[*] close');};
 
         sendbtn.click(function(){
-          print('[ ] sending', inp.val());
+          print('[>] sending', inp.val());
           sockjs.send(inp.val());
           inp.val('');
         });
