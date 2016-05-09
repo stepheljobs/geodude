@@ -27,7 +27,7 @@ function Socket(conn) {
           case "auth":
             authController(req, function(status,data){
               if (status === "broadcast") {
-                var bcast = { "broadcast" : { route: {"module": "request", "action": "broadcast" }, "payload": data } }
+                var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
                 console.log('broadcast: ', JSON.stringify(bcast));
                 conn.write(JSON.stringify(bcast));
               }else{
@@ -62,7 +62,8 @@ function Socket(conn) {
         }
       } catch(err) {
         console.log("err: ", err);
-        conn.write("Invalid format");
+        var err = { "response" : { "code": "error", "payload": "Invalid format" }}
+        conn.write(JSON.stringify(err));
       }
 
   });
