@@ -49,14 +49,13 @@ function Request(req, cb) {
               if(req.payload.rentorbuy){
                 if(req.payload.budget){
 
-
                   db.hgetall('hm-user.'+ req.payload.id, function(err, data){
 
                     var fullname = data.first_name + " " + data.last_name;
                     var photo = data.photo;
                     var requestCreated = {
-                      id: randomstring.generate(8),
-                      userid: req.payload.id,
+                      requestid: randomstring.generate(8),
+                      clientid: req.payload.id,
                       fullname: fullname,
                       photo: photo,
                       country: req.payload.country,
