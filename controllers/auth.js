@@ -4,95 +4,22 @@ var Redis = require('ioredis');
 var request = require('request');
 var randomstring = require('randomstring');
 var bcrypt = require('bcrypt');
+
 var psubLocation = require('../service/psublocation');
 var psubRequest = require('../service/psubrequest');
+
+var facebookLogin = require('../service/facebooklogin');
+
+
 function Auth(req, cb) {
 
   var db = new Redis({port: 6379,host: '127.0.0.1'});
 
   switch (req.route.action) {
     case 'fblogin':
-    var profile;
-    request.get('https://graph.facebook.com/me?fields=first_name,last_name,email,picture&access_token='+ req.payload.token, function(err, request, result) {
-      profile = JSON.parse(result);
-      if(profile.error) {
-        console.log('error: ', profile.error.message);
-        cb("invalid", profile.error.message);
-      } else {
-
-        db.get("st-user."+profile.email, function(err, id){
-          console.log('id: ', id);
-          if(id){ // Login
-            console.log('User exist, user will logged in.');
-            db.hgetall("hm-user."+id, function(err, user) {
-              console.log('user: ', JSON.stringify(user));
-              cb("success", user);
-
-              if (user.user_type === "BROKER") {
-                // subscribe to a location.
-                if(cover_areas){
-                  var areas = user.cover_areas.split(",");
-                  areas.map(function(area){
-                    psubLocation(area, function(err, broadcast){
-                      cb("success", broadcast);
-                    });
-                  });
-                }
-              }else{
-
-                // detect if there is request from this user.
-                db.get("st-req."+id, function (err, myrequestid) {
-                  if(myrequestid){
-                    console.log('what the heck is this result:> ', result);
-                    cb("success", { id: id, message: "User logged in", requestexist: true });
-
-                    //subscribe to your own request.
-                    // paramater myid, requestid, callback
-                    psubRequest(id, myrequestid, function(broadcast){
-                      cb("broadcast", broadcast);
-                    });
-                  }else{
-                    cb("success", { id: id, message: "User logged in", requestexist: false });
-                  }
-                });
-              }
-            });
-          }else{ // Signup
-            console.log('User does not exist, user will signup.');
-
-            var userProfile = {
-              id: randomstring.generate(8),
-              member_since: Date.now(),
-              email: profile.email,
-              first_name: profile.first_name || '',
-              last_name: profile.last_name || '',
-              photo: profile.picture.data.url || ''
-            }
-
-            db.set("st-user."+profile.email, userProfile.id);
-            db.hmset("hm-user."+userProfile.id, userProfile);
-
-            //check if registered.
-            db.hgetall("hm-user."+userProfile.id, function(err, user) {
-              console.log('user: ', JSON.stringify(user));
-              cb("success", userProfile);
-
-              //subscribe part after register
-              if(user.user_type === "BROKER"){
-                // subscribe to a location.
-                var areas = user.cover_areas.split(",");
-                areas.map(function(area){
-                  psubLocation(area, function(err, broadcast){
-                    cb("success", broadcast);
-                  });
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-
+      facebookLogin(req.payload, function(status,response){
+        cb(status, response);
+      });
       break;
     case 'login': // {"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker2@gmail.com", "password": "broker2"}}
         console.log('manual login start');
@@ -114,7 +41,16 @@ function Auth(req, cb) {
                               //subscribe to your own request.
                               // paramater myid, requestid, callback
                               psubRequest(id, requestid, function(broadcast){
-                                cb("broadcast", broadcast);
+                                var brkr = JSON.parse(broadcast);
+                                var brokerprofile = {
+                                  brokerid: brkr.id,
+                                  first_name: brkr.first_name,
+                                  last_name: brkr.last_name,
+                                  photo: brkr.photo,
+                                  liscnum: brkr.brokerlisc,
+                                  yrexam: brkr.yrexam
+                                }
+                                cb("broadcast", brokerprofile);
                               });
                             }else{
                               cb("success", { id: id, message: "User logged in", requestexist: false });
@@ -174,7 +110,7 @@ function Auth(req, cb) {
                   password: bcrypt.hashSync(req.payload.password, bcrypt.genSaltSync(10)),
                   first_name: req.payload.first_name,
                   last_name: req.payload.last_name || '',
-                  user_type: req.payload.user_type || 'CLIENT',
+                  user_type: req.payload.user_type,
                   photo: ''
                 }
 
@@ -187,6 +123,7 @@ function Auth(req, cb) {
                     cb("success", userProfile);
                   }
                 });
+
                 }else{
                   cb("invalid", "Invalid/Empty Password");
                 }
