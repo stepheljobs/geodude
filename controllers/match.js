@@ -2,6 +2,7 @@
 
 var Redis = require('ioredis');
 var pubRequest = require('../service/pubrequest');
+var rejectClient = require('../service/rejectclient');
 
 function Match(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -16,6 +17,21 @@ function Match(req, cb) {
           }
         });
       break;
+    case 'rejectrequest': //use by broker only
+
+    if (req.payload.brokerid) {
+      if (req.payload.requestid) {
+        rejectClient(req.payload, function(result) {
+          console.log('----> ', result);
+          if(result){
+            cb("success", result);
+          }else{
+            cb("error", "No response.");
+          }
+        });
+      } else { cb("error", "No Requestid."); }
+    } else { cb("error", "No Brokerid."); }
+
       break;
     default:
   }
