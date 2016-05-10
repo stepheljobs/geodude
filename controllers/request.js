@@ -72,13 +72,14 @@ function Request(req, cb) {
                     db.hmset("hm-req."+requestCreated.requestid, requestCreated);
                     db.hgetall("hm-req."+requestCreated.requestid, function(err, data) {
                       console.log("request data sent to brokers...");
-                      cb("success", { content: data });
 
                       psubRequest(requestCreated.clientid, requestCreated.requestid, function(result){
                         cb("broadcast", result);
                       });
 
-                      pubLocation(data.id, data.area, data);
+                      pubLocation(data.id, data.area, data, function(count){
+                        cb("success", { content: data, brokercount: count })
+                      });
                     });
                   });
 
