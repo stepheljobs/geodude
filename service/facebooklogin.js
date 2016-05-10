@@ -24,6 +24,7 @@ function FacebookLogin(payload, cb) {
           db.hgetall("hm-user."+useridexist, function(err, user) {
             console.log('user: ', JSON.stringify(user));
             cb("success", user);
+
             if (user.user_type === "BROKER") {
               if(cover_areas) { // subscribe to a location.
                 var areas = user.cover_areas.split(",");
@@ -42,7 +43,7 @@ function FacebookLogin(payload, cb) {
 
                   //subscribe to your own request.
                   // paramater myid, requestid, callback
-                  psubRequest(id, myrequestid, function(broadcast){
+                  psubRequest(useridexist, myrequestid, function(broadcast){
                     var brkr = JSON.parse(broadcast);
                     var brokerprofile = {
                       brokerid: brkr.id,
@@ -92,6 +93,7 @@ function FacebookLogin(payload, cb) {
                 });
               });
             }
+
           });
         }
       });
