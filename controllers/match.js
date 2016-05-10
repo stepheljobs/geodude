@@ -22,7 +22,6 @@ function Match(req, cb) {
     if (req.payload.brokerid) {
       if (req.payload.requestid) {
         rejectClient(req.payload, function(result) {
-          console.log('----> ', result);
           if(result){
             cb("success", result);
           }else{

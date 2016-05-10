@@ -8,9 +8,21 @@ function FetchAllRequest(blockrequest,cover_areas, cb) {
   db.keys('hm-req.????????', function(err, requests) {
     requests.map(function(singleRequest) {
 
-      if(blockrequest.includes(singleRequest)){
-        console.log("a request is blocked already by the broker: ", singleRequest);
-      }else{
+      if (blockrequest) {
+        if(!blockrequest.includes(singleRequest)){
+          db.hgetall(singleRequest, function(err, requestDetail) {
+            var area = cover_areas.split(",");
+            area.map(function(ca) {
+              if(requestDetail.area.includes(ca)) {
+                console.log("match cover area: ", requestDetail);
+                sortedRequest.push(requestDetail);
+              }
+            });
+          });
+        } else {
+          console.log("a request is blocked already by the broker: ", singleRequest);
+        }
+      } else {
         db.hgetall(singleRequest, function(err, requestDetail) {
           var area = cover_areas.split(",");
           area.map(function(ca) {

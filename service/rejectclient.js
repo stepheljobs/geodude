@@ -13,7 +13,12 @@ function RejectClient(payload, cb) {
 
     if(brokerdata.id){
 
-        var BlockReqArray = brokerdata.blockrequest.split(",");
+        if(brokerdata.blockrequest){
+          var BlockReqArray = brokerdata.blockrequest.split(",");
+        }else{
+          var BlockReqArray = [];
+        }
+
         var newBlockReq = "hm-req."+requestid;
         BlockReqArray.push(newBlockReq);
 
