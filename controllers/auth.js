@@ -69,7 +69,7 @@ function Auth(req, cb) {
                           if(user.cover_areas){
                             var areaArray = user.cover_areas.split(",");
                             areaArray.map(function(loc){
-                              psubLocation(loc, function(broadcast){
+                              psubLocation(loc, function(err, broadcast){
                                 console.log("auth:psublocation >>> ", JSON.parse(broadcast));
                                   var request = JSON.parse(broadcast);
                                   cb("broadcast", request);

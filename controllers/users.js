@@ -27,7 +27,9 @@ function Users(req, cb){
           // subscribe to a location.
           var areas = user.cover_areas.split(",");
           areas.map(function(area){
-            psubLocation(area);
+            psubLocation(area,function(err, data){
+              console.log(data);
+            });
           });
         });
       }else{
