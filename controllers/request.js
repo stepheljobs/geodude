@@ -2,6 +2,7 @@
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
 var pubLocation = require('../service/publocation');
+var psubRequest = require('../service/psubrequest');
 var fetchAllRequest = require('../service/fetchallrequest');
 
 function Request(req, cb) {
@@ -72,6 +73,11 @@ function Request(req, cb) {
                     db.hgetall("hm-req."+requestCreated.requestid, function(err, data) {
                       console.log("request data sent to brokers...");
                       cb("success", { content: data });
+
+                      psubRequest(requestCreated.clientid, requestCreated.requestid, function(result){
+                        cb("broadcast", result);
+                      });
+
                       pubLocation(data.id, data.area, data);
                     });
                   });
