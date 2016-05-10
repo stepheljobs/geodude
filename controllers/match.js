@@ -18,7 +18,7 @@ function Match(req, cb) {
         });
       break;
     case 'fetchallmatch':
-        fetchAllMatch(req.payload.clientid, function(result){
+        fetchAllMatch(req.payload.clientid, function(err, result){
           if (result) {
             cb("success", result);
           } else {

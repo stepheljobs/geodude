@@ -67,9 +67,9 @@ function Request(req, cb) {
                       created: Date.now()
                     }
 
-                    db.set("st-req."+req.payload.id, requestCreated.id);
-                    db.hmset("hm-req."+requestCreated.id, requestCreated);
-                    db.hgetall("hm-req."+requestCreated.id, function(err, data) {
+                    db.set("st-req."+req.payload.id, requestCreated.requestid);
+                    db.hmset("hm-req."+requestCreated.requestid, requestCreated);
+                    db.hgetall("hm-req."+requestCreated.requestid, function(err, data) {
                       console.log("request data sent to brokers...");
                       cb("success", { content: data });
                       pubLocation(data.id, data.area, data);
