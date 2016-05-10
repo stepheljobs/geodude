@@ -15,7 +15,8 @@ function PubRequest(data, cb) {
      matchid: requestid+"."+brokerid,
      brokerid: brokerid,
      photo: brokerprofile.photo,
-     fullname: brokerprofile.first_name + " " + brokerprofile.last_name,
+     firstname: brokerprofile.first_name,
+     lastname: brokerprofile.last_name,
      brokerlisc: brokerprofile.brokerlisc,
      yrexam: brokerprofile.yrexam,
      matchcreated: Date.now()
