@@ -2,6 +2,7 @@
 
 var Redis = require('ioredis');
 var psubLocation = require('../service/psublocation');
+var myaccount = require('../service/myaccount');
 
 function Users(req, cb){
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -35,6 +36,11 @@ function Users(req, cb){
       }else{
         cb("incomplete", "Missing broker id");
       }
+      break;
+    case 'me': // {"route": { "module":"user", "action": "me" } , "payload": { "userid": "userid" }}
+        myaccount(req.payload.userid, function(err, data) {
+          cb("success", data);
+        });
       break;
     default:
   }
