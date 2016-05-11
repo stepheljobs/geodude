@@ -40,13 +40,12 @@ function FacebookLogin(payload, cb) {
                 areas.map(function(area) {
                   psubLocation(area, function(err, broadcast) {
                     console.log("success ", broadcast);
-                    cb("success", broadcast);
+                    cb("broadcast", broadcast);
                   });
                 });
               }
 
             } else { // ELSE user_type === CLIENT
-              console.log("---> CLIENT");
               db.get("st-req."+useridexist, function (err, myrequestid) { // detect if there is request from this user.
                 if(myrequestid){
                   cb("success", { id: useridexist, message: "User logged in", requestexist: true });
@@ -77,7 +76,6 @@ function FacebookLogin(payload, cb) {
         // Signup
         }else{
           console.log('User does not exist, user will signup.');
-          console.log('---> payload.user_type ', payload.user_type);
           var userProfile = {
             id: randomstring.generate(8),
             member_since: Date.now(),

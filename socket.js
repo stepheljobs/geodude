@@ -39,9 +39,15 @@ function Socket(conn) {
             break;
             case "request":
               requestController(req, function(status,data){
-                var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
-                console.log('response: ', JSON.stringify(response));
-                conn.write(JSON.stringify(response));
+                if (status === "broadcast") {
+                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
+                  conn.write(JSON.stringify(bcast));
+                  console.log('broadcast: ', JSON.stringify(bcast));
+                }else{
+                  var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
+                  console.log('response: ', JSON.stringify(response));
+                  conn.write(JSON.stringify(response));
+                }
               });
               break;
             case "user":
