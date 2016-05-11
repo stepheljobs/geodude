@@ -18,15 +18,24 @@ function FacebookLogin(payload, cb) {
     if (profile.error) {
       console.log('error: ', profile.error.message);
       cb("invalid", profile.error.message);
+
     } else {
+      // check if there is email connected to id number
       db.get("st-user." + profile.email, function(err, useridexist) {
-        if(useridexist) { // Login
+        if(useridexist) {
           db.hgetall("hm-user."+useridexist, function(err, user) {
             console.log('user: ', JSON.stringify(user));
-            cb("success", user);
+            // cb("success", user);
+
+            if(user.working_email){
+              cb("success", { id: user.id, message: "User logged in", brokerprofile: true });
+            }else{
+              cb("success", { id: user.id, message: "User logged in", brokerprofile: false });
+            }
 
             if (user.user_type === "BROKER") {
-              if(cover_areas) { // subscribe to a location.
+              // if there is cover_areas already then subscribe on login
+              if(user.cover_areas) {
                 var areas = user.cover_areas.split(",");
                 areas.map(function(area) {
                   psubLocation(area, function(err, broadcast) {
@@ -36,7 +45,8 @@ function FacebookLogin(payload, cb) {
                 });
               }
 
-            } else {
+            } else { // ELSE user_type === CLIENT
+              console.log("---> CLIENT");
               db.get("st-req."+useridexist, function (err, myrequestid) { // detect if there is request from this user.
                 if(myrequestid){
                   cb("success", { id: useridexist, message: "User logged in", requestexist: true });
@@ -63,15 +73,18 @@ function FacebookLogin(payload, cb) {
               });
             }
           });
-        }else{ // Signup
-          console.log('User does not exist, user will signup.');
 
+        // Signup
+        }else{
+          console.log('User does not exist, user will signup.');
+          console.log('---> payload.user_type ', payload.user_type);
           var userProfile = {
             id: randomstring.generate(8),
             member_since: Date.now(),
             email: profile.email,
             first_name: profile.first_name || '',
             last_name: profile.last_name || '',
+            user_type: payload.user_type,
             photo: profile.picture.data.url || ''
           }
 
@@ -82,18 +95,6 @@ function FacebookLogin(payload, cb) {
           db.hgetall("hm-user."+userProfile.id, function(err, user) {
             console.log('user: ', JSON.stringify(user));
             cb("success", userProfile);
-
-            //subscribe part after register
-            if(user.user_type === "BROKER"){
-              // subscribe to a location.
-              var areas = user.cover_areas.split(",");
-              areas.map(function(area){
-                psubLocation(area, function(err, broadcast){
-                  cb("success", broadcast);
-                });
-              });
-            }
-
           });
         }
       });
