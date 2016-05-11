@@ -29,7 +29,7 @@ function Users(req, cb){
           var areas = user.cover_areas.split(",");
           areas.map(function(area){
             psubLocation(area,function(err, data){
-              console.log(data);
+              cb("broadcast", data);
             });
           });
         });

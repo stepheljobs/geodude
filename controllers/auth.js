@@ -7,9 +7,7 @@ var bcrypt = require('bcrypt');
 
 var psubLocation = require('../service/psublocation');
 var psubRequest = require('../service/psubrequest');
-
 var facebookLogin = require('../service/facebooklogin');
-
 
 function Auth(req, cb) {
 
