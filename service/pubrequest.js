@@ -26,9 +26,9 @@ function PubRequest(data, cb) {
     }
 
     pub.hmset("hm-match."+requestid+"."+brokerid, matchdata);
-    // broker will now subscribe to the room channel when the click I have it.
     psubrooms(requestid,clientid,brokerid, function(result){
-        cb("broadcast", result);
+        console.log('pubrequest --------------> ', JSON.parse(result));
+        cb("broadcast", JSON.parse(result));
     });
     pub.publish(clientid+"."+requestid, JSON.stringify(brokerprofile)); //broadcast to client
     cb("success", "I have it sent to client.");

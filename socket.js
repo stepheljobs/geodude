@@ -40,9 +40,7 @@ function Socket(conn) {
             case "request":
               requestController(req, function(status,data){
                 if (status === "broadcast") {
-                  console.log('data ------> ', data);
                   var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
-                  console.log('bcast ------> ', bcast);
                   conn.write(JSON.stringify(bcast));
                   console.log('req - broadcast: ', JSON.stringify(bcast));
                 }else{

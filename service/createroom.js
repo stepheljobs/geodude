@@ -2,6 +2,7 @@
 
 var Redis = require('ioredis');
 var pubRooms = require('../service/pubrooms');
+var getRequestDetails = require('../util/getrequestdetails');
 
 function CreateRoom(requestid, clientid, brokerid, cb) {
 
@@ -10,16 +11,33 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
     if (brokerid) {
       if (requestid) {
 
-        var chatformat = { message: "Hello thank you for helping me.", from: clientid, type: "text", created: Date.now() }
+        var chatformat = {
+          message: "Hello thank you for helping me.",
+          from: clientid,
+          type: "text",
+          created: Date.now()
+        }
 
-        db.keys('chatroom.' + requestid +"."+ clientid +"."+ brokerid, function(err, chatroom){
+        var chatroomid = 'chatroom.' + requestid +"."+ clientid +"."+ brokerid;
+        db.keys(chatroomid, function(err, chatroom){
           console.log('chatroom: ', chatroom.length);
           if (chatroom.length === 0) {
             console.log('no existing, create the room.');
             db.lpush('chatroom.' + requestid +"."+ clientid +"."+ brokerid, JSON.stringify(chatformat));
-            cb("success","chatroom created");
-            // the client must also subscribe to this room.
-            pubRooms(requestid,clientid,brokerid);
+
+              getRequestDetails(requestid, function(request){
+                var chatroomdetails = {
+                  chatroomid: chatroomid,
+                  location: request.area,
+                  budget: request.budget,
+                  rentorbuy: request.rentorbuy,
+                  propertytype: request.ptype,
+                  addinfo: request.add_info,
+                }
+                cb("success",chatroomdetails);
+                // the client must also subscribe to this room.
+                pubRooms(requestid,clientid,brokerid, chatroomdetails);
+              });
           }else{
             console.log('existing, create the room not valid.');
             cb("invalid","chatroom exist");

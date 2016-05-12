@@ -19,8 +19,9 @@ function Match(req, cb) {
             if(requestid){
 
               pubRequest(req.payload, function(status, result){
+                console.log('match --------------> ', result);
                 if(result){
-                  cb(status, result);
+                  cb(status, JSON.stringify(result));
                 }else{
                   cb('invalid', 'no result');
                 }

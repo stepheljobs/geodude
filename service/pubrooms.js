@@ -1,11 +1,11 @@
 'use strict'
 
 var Redis = require('ioredis');
-var psubrooms = require('../service/psubrooms');
 
-function PubRooms(requestid,clientid,brokerid) {
+function PubRooms(requestid,clientid,brokerid, reqdetails) {
     var pub = new Redis({ port: 6379, host: '127.0.0.1'});
-    pub.publish("chatroom."+requestid+"."+clientid+"."+brokerid, "A new room is created"); //broadcast to client
+    console.log('pubrooms --------------> ', reqdetails);
+    pub.publish("chatroom."+requestid+"."+clientid+"."+brokerid, reqdetails); //broadcast to client
 }
 
 module.exports = PubRooms;
