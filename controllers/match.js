@@ -10,11 +10,11 @@ function Match(req, cb) {
 
   switch (req.route.action) {
     case 'haveit':
-        pubRequest(req.payload, function(err, result){
-          if (result) {
-            cb("success", result);
-          } else {
-            cb("error", "No response.");
+        pubRequest(req.payload, function(status, result){
+          if(result){
+            cb(status, result);
+          }else{
+            cb('invalid', 'no result');
           }
         });
       break;
