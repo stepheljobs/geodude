@@ -3,6 +3,7 @@
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
 var createroom = require('../service/createroom');
+var fetchallrooms = require('../service/fetchallrooms');
 
 function Chat(req, cb) {
 
@@ -13,6 +14,13 @@ function Chat(req, cb) {
       var clientid = req.payload.clientid;
       var brokerid = req.payload.brokerid;
       createroom(requestid, clientid, brokerid, function(status,result){
+        cb(status, result);
+      });
+    break;
+    case 'fetchall': //
+      var userid = req.payload.userid;
+      var usertype = req.payload.usertype;
+      fetchallrooms(userid, usertype, function(status,result){
         cb(status, result);
       });
     break;
