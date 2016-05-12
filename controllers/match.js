@@ -21,7 +21,7 @@ function Match(req, cb) {
               pubRequest(req.payload, function(status, result){
                 console.log('match --------------> ', result);
                 if(result){
-                  cb(status, JSON.stringify(result));
+                  cb(status, result);
                 }else{
                   cb('invalid', 'no result');
                 }

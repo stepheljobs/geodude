@@ -66,9 +66,9 @@ function Socket(conn) {
             case "match":
               matchController(req, function(status,data){
                 if (status === "broadcast") {
-                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
+                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
                   conn.write(JSON.stringify(bcast));
-                  console.log('match - broadcast: ', JSON.stringify(bcast));
+                  console.log('match - broadcast: ', bcast);
                 }else{
                   var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
                   console.log('response: ', JSON.stringify(response));
