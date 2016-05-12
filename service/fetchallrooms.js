@@ -25,7 +25,7 @@ function FetchAllRooms(userid, usertype, cb) {
 
             db.lrange(room, min, max, function (err, messages) {
               console.log("messages: ", messages[0]);
-              rooms.latestmsg = messages[0];
+              rooms.latestmsg = JSON.parse(messages[0]);
               db.hgetall('hm-user.'+userid, function(err, profile){
                 rooms.photo = profile.photo;
                 rooms.fullname = profile.first_name + " " + profile.last_name;
