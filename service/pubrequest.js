@@ -11,7 +11,7 @@ function PubRequest(data, cb) {
     var requestid = data.requestid;
     var brokerid = data.brokerid;
     pub.hgetall("hm-user."+brokerid, function(err, brokerprofile) {
-    console.log('a broker says i have it to request id: ', requestid);
+    console.log('A broker says i have it to request id: ', requestid);
 
     var matchdata = {
       matchid: requestid+"."+brokerid,

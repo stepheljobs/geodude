@@ -1,6 +1,7 @@
 'use strict'
 
 var Redis = require('ioredis');
+var pubRooms = require('../service/pubrooms');
 
 function CreateRoom(requestid, clientid, brokerid, cb) {
 
@@ -18,6 +19,7 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
             db.lpush('chatroom.' + requestid +"."+ clientid +"."+ brokerid, JSON.stringify(chatformat));
             cb("success","chatroom created");
             // the client must also subscribe to this room.
+            pubRooms(requestid,clientid,brokerid);
           }else{
             console.log('existing, create the room not valid.');
             cb("invalid","chatroom exist");
