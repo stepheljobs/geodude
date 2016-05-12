@@ -10,13 +10,25 @@ function Match(req, cb) {
 
   switch (req.route.action) {
     case 'haveit':
-        pubRequest(req.payload, function(status, result){
-          if(result){
-            cb(status, result);
-          }else{
-            cb('invalid', 'no result');
-          }
-        });
+        var clientid = req.payload.clientid,
+            requestid = req.payload.requestid,
+            brokerid = req.payload.brokerid;
+
+        if(clientid){
+          if(brokerid){
+            if(requestid){
+
+              pubRequest(req.payload, function(status, result){
+                if(result){
+                  cb(status, result);
+                }else{
+                  cb('invalid', 'no result');
+                }
+              });
+
+            }else{ cb('invalid', 'no requestid'); }
+          }else{ cb('invalid', 'no brokerid'); }
+        }else{ cb('invalid', 'no clientid'); }
       break;
     case 'rejectrequest': //use by broker only
     if (req.payload.brokerid) {
@@ -34,6 +46,7 @@ function Match(req, cb) {
     case 'fetchallmatch':
         fetchAllMatch(req.payload.clientid, function(err, result){
           if (result) {
+            console.log('fetchAllMatch: ', result);
             cb("success", result);
           } else {
             cb("error", "No response.");
