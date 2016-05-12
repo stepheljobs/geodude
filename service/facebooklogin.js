@@ -62,7 +62,7 @@ function FacebookLogin(payload, cb) {
                       liscnum: brkr.brokerlisc,
                       yrexam: brkr.yrexam
                     }
-                    console.log("broadcast: ", brokerprofile);
+                    console.log("fb: broadcast: ", brokerprofile);
                     cb("broadcast", brokerprofile);
                   });
                 }else{
