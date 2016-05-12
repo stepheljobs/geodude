@@ -18,7 +18,7 @@ function FetchAllMatch(clientid, cb) {
         });
       });
 
-      setTimeout(function(){
+      setTimeout(function() {
         cb(null,sortedMatch);
       }, 3000);
     });

@@ -15,6 +15,7 @@ function PubRequest(data, cb) {
 
     var matchdata = {
       matchid: requestid+"."+brokerid,
+      requestid: requestid,
       brokerid: brokerid,
       photo: brokerprofile.photo,
       firstname: brokerprofile.first_name,
