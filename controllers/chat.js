@@ -31,6 +31,15 @@ function Chat(req, cb) {
       cb(status, result);
     });
     break;
+    case 'sendmsg':
+    var roomid = req.payload.roomid;
+    var message = req.payload.message;
+    var userid = req.payload.userid;
+    var type = req.payload.type;
+    sendmessage(roomid, message, userid, type, function(status, result){
+      cb(status, result);
+    });
+    break;
   }
 
 }
