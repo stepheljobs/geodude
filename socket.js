@@ -29,7 +29,6 @@ function Socket(conn) {
             authController(req, function(status,data){
               if (status === "broadcast") {
                 var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
-                console.log('auth - broadcast: ', bcast);
                 conn.write(JSON.stringify(bcast));
               }else{
                 var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
@@ -41,7 +40,9 @@ function Socket(conn) {
             case "request":
               requestController(req, function(status,data){
                 if (status === "broadcast") {
-                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
+                  console.log('data ------> ', data);
+                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
+                  console.log('bcast ------> ', bcast);
                   conn.write(JSON.stringify(bcast));
                   console.log('req - broadcast: ', JSON.stringify(bcast));
                 }else{
