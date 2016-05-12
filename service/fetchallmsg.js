@@ -8,8 +8,8 @@ function FetchAllMsg(roomid, cb) {
 
   if (roomid) {
     var min = 0, max = -1;
-    db.lrange(room, min, max, function (err, messages) {
-      console.log(roomdi + " messages: ", messages);
+    db.lrange(roomid, min, max, function (err, messages) {
+      console.log(roomid + " messages: ", messages);
       cb('success', messages);
     });
   } else {
