@@ -9,20 +9,20 @@ function PsubRooms(requestid, clientid, brokerid, callback) {
   var channel = "chatroom."+requestid+"."+clientid+"."+brokerid;
   console.log('channel: ', channel);
   sub.psubscribe(channel, function (err, count) {
-    console.log("count: ", count);
-    console.log("err: ", err);
-    console.log(myid + " subscribed to channel: " + channel);
+    console.log("PsubRooms count: ", count);
+    console.log("PsubRooms err: ", err);
+    console.log("PsubRooms subscribed to channel: " + channel);
   });
   sub.on('pmessage', function (pattern, channel, message) {
-    console.log('sub pattern: ', pattern);
-    console.log('sub channel: ', channel);
-    console.log('sub message: ', message);
+    console.log('PsubRooms pattern: ', pattern);
+    console.log('PsubRooms channel: ', channel);
+    console.log('PsubRooms message: ', message);
     callback(message);
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {
-    console.log('sub pattern: ', pattern);
-    console.log('sub channel: ', channel);
-    console.log('sub message: ', message);
+    console.log('PsubRooms pattern: ', pattern);
+    console.log('PsubRooms channel: ', channel);
+    console.log('PsubRooms message: ', message);
   });
 }
 
