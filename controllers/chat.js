@@ -6,6 +6,7 @@ var createroom = require('../service/createroom');
 var fetchallrooms = require('../service/fetchallrooms');
 var fetchallmsg = require('../service/fetchallmsg');
 var sendmessage = require('../service/sendmessage');
+var subscriberoom = require('../service/subscriberoom');
 
 function Chat(req, cb) {
 
@@ -27,19 +28,25 @@ function Chat(req, cb) {
       });
     break;
     case 'fetchallmsg':
-    var roomid = req.payload.roomid;
-    fetchallmsg(roomid, function(status, result){
-      cb(status, result);
-    });
+      var roomid = req.payload.roomid;
+      fetchallmsg(roomid, function(status, result){
+        cb(status, result);
+      });
     break;
     case 'sendmsg':
-    var roomid = req.payload.roomid;
-    var message = req.payload.message;
-    var userid = req.payload.userid;
-    var type = req.payload.type;
-    sendmessage(roomid, message, userid, type, function(status, result){
-      cb(status, result);
-    });
+      var roomid = req.payload.roomid;
+      var message = req.payload.message;
+      var userid = req.payload.userid;
+      var type = req.payload.type;
+      sendmessage(roomid, message, userid, type, function(status, result){
+        cb(status, result);
+      });
+    break;
+    case 'subscribe':
+      var roomid = req.payload.roomid;
+      subscriberoom(roomid, function(status, result) {
+        cb(status, result);
+      });
     break;
   }
 
