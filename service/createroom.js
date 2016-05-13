@@ -35,7 +35,6 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
                   addinfo: request.add_info,
                 }
                 cb("success",chatroomdetails);
-                // the client must also subscribe to this room.
                 pubRooms(requestid,clientid,brokerid, chatroomdetails);
               });
           }else{
