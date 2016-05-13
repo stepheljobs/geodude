@@ -11,6 +11,7 @@ function SubscribeRoom(roomid, cb) {
       console.log("count: ", count);
       console.log("err: ", err);
       console.log("subscribed to chatroom: " + roomid);
+      cb('success', 'User is now subscribed to room '+ roomid);
     });
 
     sub.on('pmessage', function (pattern, channel, message) {
