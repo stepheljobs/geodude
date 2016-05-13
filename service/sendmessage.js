@@ -23,7 +23,7 @@ function SendMessage(roomid, message, userid, type, cb) {
             console.log(userid + " subscribed to chatroom: " + roomid);
           });
 
-          sub.on('pmessage', function (pattern, channel, message) {
+          db.on('pmessage', function (pattern, channel, message) {
             console.log('sub pattern: ', pattern);
             console.log('sub channel: ', channel);
             console.log('sub message: ', message);
@@ -31,7 +31,7 @@ function SendMessage(roomid, message, userid, type, cb) {
             cb('broadcast', message);
           });
 
-          sub.on('pmessageBuffer', function (pattern, channel, message) {
+          db.on('pmessageBuffer', function (pattern, channel, message) {
             console.log('sub pattern: ', pattern);
             console.log('sub channel: ', channel);
             console.log('sub message: ', message);
