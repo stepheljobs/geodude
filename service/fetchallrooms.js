@@ -15,9 +15,10 @@ function FetchAllRooms(userid, usertype, cb) {
           var arrayRoom = [];
           listofrooms.map(function(room, iter, total){
             var min = 0, max = -1;
-
+            var splitRoomId = room.split(".",2);
             var rooms = {
               roomid: room,
+              requestid: splitRoomId[1],
               photo: '',
               fullname: '',
               latestmsg: ''
@@ -45,9 +46,10 @@ function FetchAllRooms(userid, usertype, cb) {
           var arrayRoom = [];
           listofrooms.map(function(room, iter, total){
             var min = 0, max = -1;
-
+            var splitRoomId = room.split(".",2);
             var rooms = {
               roomid: room,
+              requestid: splitRoomId[1],
               photo: '',
               fullname: '',
               latestmsg: ''
@@ -55,7 +57,7 @@ function FetchAllRooms(userid, usertype, cb) {
 
             db.lrange(room, min, max, function (err, messages) {
               console.log("messages: ", messages[0]);
-              rooms.latestmsg = messages[0];
+              rooms.latestmsg = JSON.parse(messages[0]);
               db.hgetall('hm-user.'+userid, function(err, profile){
                 rooms.photo = profile.photo;
                 rooms.fullname = profile.first_name + " " + profile.last_name;
