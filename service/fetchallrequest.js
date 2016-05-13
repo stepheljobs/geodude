@@ -6,7 +6,7 @@ function FetchAllRequest(blockrequest,cover_areas, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
   var sortedRequest = [];
   db.keys('hm-req.????????', function(err, requests) {
-    requests.map(function(singleRequest) {
+    requests.map(function(singleRequest, iter, total) {
 
       if (blockrequest) {
         if(!blockrequest.includes(singleRequest)){
@@ -35,9 +35,9 @@ function FetchAllRequest(blockrequest,cover_areas, cb) {
       }
     });
 
-    setTimeout(function(){
+    if(iter === total.length - 1){
       cb(null,sortedRequest);
-    }, 3000);
+    }
 
   })
 }
