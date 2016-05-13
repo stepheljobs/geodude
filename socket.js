@@ -79,7 +79,7 @@ function Socket(conn) {
             case "chat":
               chatController(req, function(status,data){
                 if (status === "broadcast") {
-                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
+                  var bcast = { "broadcast" : { route: {"module": "chat", "action": "broadcast" }, "payload": JSON.parse(data) } }
                   conn.write(JSON.stringify(bcast));
                   console.log('match - broadcast: ', bcast);
                 }else{
