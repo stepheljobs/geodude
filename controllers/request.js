@@ -4,6 +4,7 @@ var randomstring = require('randomstring');
 var pubLocation = require('../service/publocation');
 var psubRequest = require('../service/psubrequest');
 var fetchAllRequest = require('../service/fetchallrequest');
+var fetchRequestDetails = require('../service/fetchrequestdetails');
 
 function Request(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -141,6 +142,19 @@ function Request(req, cb) {
         });
       }else{
         cb("invalid", { message: "No broker id" });
+      }
+
+      break;
+
+    case 'fetchdetails':
+      if(req.payload.requestid) {
+        var requestid = req.payload.requestid;
+        fetchRequestDetails(requestid, function(status,result){
+          console.log('----> result ', result);
+          cb(status, result);
+        });
+      }else{
+        cb("invalid", { message: "No request id" });
       }
 
       break;
