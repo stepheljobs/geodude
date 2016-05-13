@@ -5,6 +5,7 @@ var randomstring = require('randomstring');
 var createroom = require('../service/createroom');
 var fetchallrooms = require('../service/fetchallrooms');
 var fetchallmsg = require('../service/fetchallmsg');
+var sendmessage = require('../service/sendmessage');
 
 function Chat(req, cb) {
 
