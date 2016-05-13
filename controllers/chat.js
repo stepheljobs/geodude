@@ -42,7 +42,7 @@ function Chat(req, cb) {
         cb(status, result);
       });
     break;
-    case 'subscribe':
+    case 'subscriberoom':
       var roomid = req.payload.roomid;
       subscriberoom(roomid, function(status, result) {
         cb(status, result);
