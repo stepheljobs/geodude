@@ -13,9 +13,31 @@ function SendMessage(roomid, message, userid, type, cb) {
 
           var chatformat = { message: message, from: userid, type: type, created: Date.now() }
           db.lpush(roomid, JSON.stringify(chatformat));
+          //return a message to sender.
+          // cb('success', chatformat);
 
-          //publish to other side.
-          
+          //subscribe first to your room then publish.
+          db.psubscribe(roomid, function (err, count) {
+            console.log("count: ", count);
+            console.log("err: ", err);
+            console.log(userid + " subscribed to chatroom: " + roomid);
+          });
+
+          sub.on('pmessage', function (pattern, channel, message) {
+            console.log('sub pattern: ', pattern);
+            console.log('sub channel: ', channel);
+            console.log('sub message: ', message);
+            // callback(message);
+            cb('broadcast', message);
+          });
+
+          sub.on('pmessageBuffer', function (pattern, channel, message) {
+            console.log('sub pattern: ', pattern);
+            console.log('sub channel: ', channel);
+            console.log('sub message: ', message);
+          });
+
+          db.publish(roomid, chatformat); //broadcast to client
 
         } else { cb('invalid', 'no usertype.') }
       } else{ cb('invalid', 'no userid.') }

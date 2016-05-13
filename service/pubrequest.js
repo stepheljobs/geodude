@@ -26,10 +26,11 @@ function PubRequest(data, cb) {
     }
 
     pub.hmset("hm-match."+requestid+"."+brokerid, matchdata);
+
     psubrooms(requestid,clientid,brokerid, function(result){
-        console.log('pubrequest --------------> ', JSON.parse(result));
         cb("broadcast", JSON.parse(result));
     });
+
     pub.publish(clientid+"."+requestid, JSON.stringify(brokerprofile)); //broadcast to client
     cb("success", "I have it sent to client.");
 

@@ -78,9 +78,15 @@ function Socket(conn) {
               break;
             case "chat":
               chatController(req, function(status,data){
-                var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
-                console.log('response: ', JSON.stringify(response));
-                conn.write(JSON.stringify(response));
+                if (status === "broadcast") {
+                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
+                  conn.write(JSON.stringify(bcast));
+                  console.log('match - broadcast: ', bcast);
+                }else{
+                  var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
+                  console.log('response: ', JSON.stringify(response));
+                  conn.write(JSON.stringify(response));
+                }
               });
               break;
           default:
