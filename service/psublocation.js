@@ -7,12 +7,14 @@ function PsubLocation(location, cb) {
   sub.psubscribe('*.'+location, function (err, count) {
     console.log("new user is now subscribed to: ", location);
     console.log("count: ", count);
-    console.log("err: ", err);
+    if (err) {
+      console.log("err: ", err);
+    }
   });
   sub.on('pmessage', function (pattern, channel, message) {
-    console.log('sub pattern: ', pattern);
-    console.log('sub channel: ', channel);
-    console.log('sub message: ', message);
+    // console.log('sub pattern: ', pattern);
+    // console.log('sub channel: ', channel);
+    // console.log('sub message: ', message);
     cb(null, message);
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {

@@ -5,9 +5,8 @@ var request = require('request');
 var randomstring = require('randomstring');
 var bcrypt = require('bcrypt');
 
-var psubLocation = require('../service/psublocation');
-var psubRequest = require('../service/psubrequest');
 var facebookLogin = require('../service/facebooklogin');
+var manualLogin = require('../service/manuallogin');
 
 function Auth(req, cb) {
 
@@ -19,77 +18,11 @@ function Auth(req, cb) {
         cb(status, response);
       });
       break;
-    case 'login': // {"route": { "module":"auth", "action": "login" } , "payload": { "email": "broker2@gmail.com", "password": "broker2"}}
-        console.log('manual login start');
-        if(req.payload.email) {
-          if(req.payload.password) {
-            db.get("st-user."+req.payload.email, function(err, id){
-              if(id){
-                db.hgetall("hm-user."+id, function(err, user) {
-                  // compare password
-                  bcrypt.compare(req.payload.password, user.password, function(err, res) {
-                    if(res){
-
-                        if(user.user_type === "CLIENT"){
-                          // detect if there is request from this user.
-                          db.get("st-req."+user.id, function (err, requestid) {
-                            if(requestid){
-                              cb("success", { id: id, message: "User logged in", requestexist: true });
-
-                              //subscribe to your own request.
-                              // paramater myid, requestid, callback
-                              psubRequest(id, requestid, function(broadcast){
-                                var brkr = JSON.parse(broadcast);
-                                var brokerprofile = {
-                                  brokerid: brkr.id,
-                                  first_name: brkr.first_name,
-                                  last_name: brkr.last_name,
-                                  photo: brkr.photo,
-                                  liscnum: brkr.brokerlisc,
-                                  yrexam: brkr.yrexam
-                                }
-                                cb("broadcast", brokerprofile);
-                              });
-                            }else{
-                              cb("success", { id: id, message: "User logged in", requestexist: false });
-                            }
-                          });
-
-                        }else{ //BROKER
-                          // detect if there is a broker profile.
-                          if(user.working_email){
-                            cb("success", { id: id, message: "User logged in", brokerprofile: true });
-                          }else{
-                            cb("success", { id: id, message: "User logged in", brokerprofile: false });
-                          }
-
-                          // broker subscribe to their own areas.
-                          if(user.cover_areas){
-                            var areaArray = user.cover_areas.split(",");
-                            areaArray.map(function(loc){
-                              psubLocation(loc, function(err, broadcast){
-                                  var request = JSON.parse(broadcast);
-                                  cb("broadcast", request);
-                              });
-                            });
-                          }
-                        }
-                    }else{
-                      cb("invalid", "Password did not match");
-                    }
-                  });
-                });
-              }else{
-                cb("invalid", "User does not have account.");
-              }
-            });
-          }else{
-            cb("invalid", "Invalid/Empty Password");
-          }
-        }else{
-          cb("invalid", "Invalid/Empty Email");
-        }
-
+    case 'login':
+      console.log('manual login start');
+      manualLogin(req.payload, function(status,response){
+        cb(status, response);
+      });
       break;
     case 'signup': // {"route": { "module":"auth", "action": "signup" } , "payload": { "email": "broker2@gmail.com", "first_name": "broker2", "last_name": "broker2", "user_type": "BROKER", "password": "broker2"}}
         console.log('manual signup start');

@@ -28,7 +28,7 @@ function Socket(conn) {
           case "auth":
             authController(req, function(status,data){
               if (status === "broadcast") {
-                var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
+                var bcast = { "broadcast" : { route: {"module": "auth", "action": "broadcast" }, "payload": data } }
                 conn.write(JSON.stringify(bcast));
               }else{
                 var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
@@ -40,7 +40,7 @@ function Socket(conn) {
             case "request":
               requestController(req, function(status,data){
                 if (status === "broadcast") {
-                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
+                  var bcast = { "broadcast" : { route: {"module": "request", "action": "broadcast" }, "payload": JSON.parse(data) } }
                   conn.write(JSON.stringify(bcast));
                   console.log('req - broadcast: ', JSON.stringify(bcast));
                 }else{
@@ -53,7 +53,7 @@ function Socket(conn) {
             case "user":
               userController(req, function(status,data){
                 if (status === "broadcast") {
-                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": data } }
+                  var bcast = { "broadcast" : { route: {"module": "user", "action": "broadcast" }, "payload": JSON.parse(data) } }
                   conn.write(JSON.stringify(bcast));
                   console.log('user - broadcast: ', JSON.stringify(bcast));
                 }else{
@@ -66,7 +66,7 @@ function Socket(conn) {
             case "match":
               matchController(req, function(status,data){
                 if (status === "broadcast") {
-                  var bcast = { "broadcast" : { route: {"module": "broadcast", "action": "broadcast" }, "payload": JSON.parse(data) } }
+                  var bcast = { "broadcast" : { route: {"module": "match", "action": "broadcast" }, "payload": JSON.parse(data) } }
                   conn.write(JSON.stringify(bcast));
                   console.log('match - broadcast: ', bcast);
                 }else{
