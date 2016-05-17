@@ -58,9 +58,8 @@ function ManualLogin(payload, cb) {
                       var areaArray = user.cover_areas.split(",");
                       areaArray.map(function(loc){
                         psubLocation(loc, function(err, broadcast){
-                            var request = JSON.parse(broadcast);
                             console.log('manuallogin ----> ', broadcast);
-                            cb("broadcast", request);
+                            cb("broadcast", broadcast);
                         });
                       });
                     }
