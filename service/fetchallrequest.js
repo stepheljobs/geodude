@@ -33,13 +33,13 @@ function FetchAllRequest(blockrequest,cover_areas, cb) {
           });
         });
       }
+
+      if(iter === total.length - 1){
+        cb(null,sortedRequest);
+      }
+      
     });
-
-    if(iter === total.length - 1){
-      cb(null,sortedRequest);
-    }
-
-  })
+  });
 }
 
 module.exports = FetchAllRequest;
