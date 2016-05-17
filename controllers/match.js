@@ -1,9 +1,11 @@
 'use strict';
 
 var Redis = require('ioredis');
-var pubRequest = require('../service/pubrequest');
+// var pubRequest = require('../service/pubrequest');
 var rejectClient = require('../service/rejectclient');
 var fetchAllMatch = require('../service/fetchallmatch');
+var acceptRequest = require('../service/acceptrequest');
+var psubrooms = require('../service/psubrooms');
 
 function Match(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -18,13 +20,11 @@ function Match(req, cb) {
           if(brokerid){
             if(requestid){
 
-              pubRequest(req.payload, function(status, result){
-                console.log('match --------------> ', result);
-                if(result){
+              acceptRequest(req.payload, function(status, result){
                   cb(status, result);
-                }else{
-                  cb('invalid', 'no result');
-                }
+                  psubrooms(requestid,clientid,brokerid, function(result){
+                      cb("broadcast", JSON.parse(result));
+                  });
               });
 
             }else{ cb('invalid', 'no requestid'); }
