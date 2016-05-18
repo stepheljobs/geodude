@@ -93,7 +93,7 @@ function FacebookLogin(payload, cb) {
           db.hgetall("hm-user."+userProfile.id, function(err, user) {
             console.log('user: ', JSON.stringify(user));
             cb("success", userProfile);
-            signupemail(userProfile.email);
+            signupemail(userProfile.email, userProfile.user_type);
           });
         }
       });

@@ -4,7 +4,7 @@ dotenv.load({ path: '.env.example' });
 
 var sendgrid  = require('sendgrid')(process.env.SENDGRID_API_KEY);
 
-function SignupEmail(email) {
+function SignupEmail(email,usertype) {
 
   var cardEmail = new sendgrid.Email({
     to: email,
@@ -14,7 +14,11 @@ function SignupEmail(email) {
   });
 
   // Tell SendGrid which template to use, and what to substitute. You can use as many substitutions as you want.
-  cardEmail.setFilters({"templates": {"settings": {"enabled": 1, "template_id": "21a2137c-1240-43bf-aad1-5f09d119cbcb"}}}); // Just replace this with the ID of the template you want to use
+  if(usertype === "BROKER"){
+    cardEmail.setFilters({"templates": {"settings": {"enabled": 1, "template_id": "21a2137c-1240-43bf-aad1-5f09d119cbcb"}}}); // Just replace this with the ID of the template you want to use
+  }else {
+    cardEmail.setFilters({"templates": {"settings": {"enabled": 1, "template_id": "532731c0-67c8-48e7-9e04-7236eccc685e"}}}); // Just replace this with the ID of the template you want to use
+  }
 
   // Everything is set up, let's send the email!
   sendgrid.send(cardEmail, function(err, json){

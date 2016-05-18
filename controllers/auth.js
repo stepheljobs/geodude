@@ -55,7 +55,7 @@ function Auth(req, cb) {
                     db.set("st-user."+req.payload.email, userProfile.id);
                     db.hmset("hm-user."+userProfile.id, userProfile);
                     cb("success", userProfile);
-                    signupemail(userProfile.email);
+                    signupemail(userProfile.email, userProfile.user_type);
                   }
                 });
 
