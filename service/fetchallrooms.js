@@ -29,7 +29,7 @@ function FetchAllRooms(userid, usertype, cb) {
               rooms.latestmsg = JSON.parse(messages[0]);
 
               if (userid === rooms.clientid) {
-                db.hgetall('hm-user.'+brokerid, function(err, profile) {
+                db.hgetall('hm-user.'+rooms.brokerid, function(err, profile) {
                   rooms.photo = profile.photo;
                   rooms.fullname = profile.first_name + " " + profile.last_name;
                   arrayRoom.push(rooms);
@@ -38,7 +38,7 @@ function FetchAllRooms(userid, usertype, cb) {
                   }
                 });
               } else {
-                db.hgetall('hm-user.'+clientid, function(err, profile) {
+                db.hgetall('hm-user.'+rooms.clientid, function(err, profile) {
                   rooms.photo = profile.photo;
                   rooms.fullname = profile.first_name + " " + profile.last_name;
                   arrayRoom.push(rooms);
