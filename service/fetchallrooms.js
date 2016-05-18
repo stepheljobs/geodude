@@ -27,12 +27,16 @@ function FetchAllRooms(userid, usertype, cb) {
 
             db.lrange(room, min, max, function (err, messages) {
               rooms.latestmsg = JSON.parse(messages[0]);
+              
+              console.log('-----------> userid ', userid);
+              console.log('-----------> rooms.clientid ', rooms.clientid);
 
               if (userid === rooms.clientid) {
                 db.hgetall('hm-user.'+rooms.brokerid, function(err, profile) {
                   rooms.photo = profile.photo;
                   rooms.fullname = profile.first_name + " " + profile.last_name;
                   arrayRoom.push(rooms);
+
                   if(iter === total.length - 1) {
                     cb("success",arrayRoom);
                   }
@@ -42,6 +46,7 @@ function FetchAllRooms(userid, usertype, cb) {
                   rooms.photo = profile.photo;
                   rooms.fullname = profile.first_name + " " + profile.last_name;
                   arrayRoom.push(rooms);
+
                   if(iter === total.length - 1) {
                     cb("success",arrayRoom);
                   }
