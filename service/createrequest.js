@@ -36,6 +36,11 @@ function CreateRequest(payload, cb) {
       });
 
       pubLocation(data.id, data.area, data, function(count){
+
+        var addrequestinfo = {
+          latest_request: [requestCreated.requestid, count],
+        }
+        db.hmset("hm-user."+payload.id, addrequestinfo);
         cb("success", { content: data, brokercount: count })
       });
     });
