@@ -33,11 +33,9 @@ function FetchAllRooms(userid, usertype, cb) {
                   rooms.fullname = profile.first_name + " " + profile.last_name;
                   arrayRoom.push(rooms);
 
-                  setTimeout(function(){
-                    if(iter === total.length - 1){
-                      cb("success", arrayRoom);
-                    }
-                  },500);
+                  if(iter === total.length - 1){
+                    cb("success", arrayRoom);
+                  }
                 });
             });
 
@@ -49,10 +47,12 @@ function FetchAllRooms(userid, usertype, cb) {
           var arrayRoom = [];
           listofrooms.map(function(room, iter, total){
             var min = 0, max = -1;
-            var splitRoomId = room.split(".",2);
+            var splitRoomId = room.split(".");
             var rooms = {
               roomid: room,
               requestid: splitRoomId[1],
+              clientid: splitRoomId[2],
+              brokerid: splitRoomId[3],
               photo: '',
               fullname: '',
               latestmsg: ''
@@ -61,17 +61,15 @@ function FetchAllRooms(userid, usertype, cb) {
             db.lrange(room, min, max, function (err, messages) {
               console.log("messages: ", messages[0]);
               rooms.latestmsg = JSON.parse(messages[0]);
+              console.log('');
               db.hgetall('hm-user.'+rooms.brokerid, function(err, profile){
                 rooms.photo = profile.photo;
                 rooms.fullname = profile.first_name + " " + profile.last_name;
                 arrayRoom.push(rooms);
 
-                setTimeout(function(){
-                  if(iter === total.length - 1){
-                    cb("success", arrayRoom);
-                  }
-                },500);
-
+                if(iter === total.length - 1){
+                  cb("success", arrayRoom);
+                }
               });
             });
 
