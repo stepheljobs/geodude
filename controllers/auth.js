@@ -7,6 +7,7 @@ var bcrypt = require('bcrypt');
 
 var facebookLogin = require('../service/facebooklogin');
 var manualLogin = require('../service/manuallogin');
+var signupemail = require('../util/signupemail');
 
 function Auth(req, cb) {
 
@@ -41,6 +42,9 @@ function Auth(req, cb) {
                   first_name: req.payload.first_name,
                   last_name: req.payload.last_name || '',
                   user_type: req.payload.user_type,
+                  archive_request: [],
+                  archive_match: [],
+                  subscribed_rooms: [],
                   photo: ''
                 }
 
@@ -51,24 +55,15 @@ function Auth(req, cb) {
                     db.set("st-user."+req.payload.email, userProfile.id);
                     db.hmset("hm-user."+userProfile.id, userProfile);
                     cb("success", userProfile);
+                    signupemail(userProfile.email);
                   }
                 });
 
-                }else{
-                  cb("invalid", "Invalid/Empty Password");
-                }
-              }else{
-                cb("invalid", "Invalid/Empty User Type");
-              }
-            }else{
-              cb("invalid", "Invalid/Empty Last Name");
-            }
-          }else{
-            cb("invalid", "Invalid/Empty First Name");
-          }
-        }else{
-          cb("invalid", "Invalid/Empty Email");
-        }
+                }else{ cb("invalid", "Invalid/Empty Password"); }
+              }else{ cb("invalid", "Invalid/Empty User Type"); }
+            }else{ cb("invalid", "Invalid/Empty Last Name"); }
+          }else{ cb("invalid", "Invalid/Empty First Name"); }
+        }else{ cb("invalid", "Invalid/Empty Email"); }
 
       break;
     default:

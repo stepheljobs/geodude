@@ -5,6 +5,7 @@ var request = require('request');
 var randomstring = require('randomstring');
 var psubLocation = require('../service/psublocation');
 var psubRequest = require('../service/psubrequest');
+var signupemail = require('../util/signupemail');
 
 function FacebookLogin(payload, cb) {
 
@@ -93,6 +94,7 @@ function FacebookLogin(payload, cb) {
           db.hgetall("hm-user."+userProfile.id, function(err, user) {
             console.log('user: ', JSON.stringify(user));
             cb("success", userProfile);
+            signupemail(userProfile.email);
           });
         }
       });

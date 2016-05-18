@@ -1,14 +1,16 @@
 /**
  * Module dependencies.
  */
-var express = require('express');
-var compress = require('compression');
-var session = require('express-session');
-var errorHandler = require('errorhandler');
-var dotenv = require('dotenv');
-var flash = require('express-flash');
-var path = require('path');
-var sass = require('node-sass-middleware');
+const express = require('express');
+const compress = require('compression');
+const session = require('express-session');
+const errorHandler = require('errorhandler');
+const flash = require('express-flash');
+const path = require('path');
+const sass = require('node-sass-middleware');
+const dotenv = require('dotenv');
+
+dotenv.load({ path: '.env.example' });
 
 /**
   * Sockets
