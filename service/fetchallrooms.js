@@ -26,19 +26,22 @@ function FetchAllRooms(userid, usertype, cb) {
             }
 
             db.lrange(room, min, max, function (err, messages) {
+              console.log("messages: ", messages[0]);
               rooms.latestmsg = JSON.parse(messages[0]);
                 db.hgetall('hm-user.'+rooms.clientid, function(err, profile) {
                   rooms.photo = profile.photo;
                   rooms.fullname = profile.first_name + " " + profile.last_name;
                   arrayRoom.push(rooms);
 
-                  if(iter === total.length - 1) {
-                    cb("success",arrayRoom);
-                  }
+                  setTimeout(function(){
+                    if(iter === total.length - 1){
+                      cb("success", arrayRoom);
+                    }
+                  },500);
                 });
             });
-          });
 
+          });
         });
       } else if (usertype === "CLIENT") {
         db.keys('chatroom.*.'+userid+'.*', function(err, listofrooms){
@@ -63,11 +66,15 @@ function FetchAllRooms(userid, usertype, cb) {
                 rooms.fullname = profile.first_name + " " + profile.last_name;
                 arrayRoom.push(rooms);
 
-                if(iter === total.length - 1){
-                  cb("success",arrayRoom);
-                }
+                setTimeout(function(){
+                  if(iter === total.length - 1){
+                    cb("success", arrayRoom);
+                  }
+                },500);
+
               });
             });
+
           });
         });
       } else { cb("invalid", "Undefined usertype"); }
