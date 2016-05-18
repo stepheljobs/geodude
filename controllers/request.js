@@ -5,20 +5,20 @@ var pubLocation = require('../service/publocation');
 var psubRequest = require('../service/psubrequest');
 var fetchAllRequest = require('../service/fetchallrequest');
 var fetchRequestDetails = require('../service/fetchrequestdetails');
+var createRequest = require('../service/createrequest');
 
 function Request(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
 
   switch (req.route.action) {
     case 'setcontent': // {"route": { "module":"request", "action": "setcontent" } , "payload": {}}
-
-    var countryArray = ["Philippines"];
-    var areaArray = ["Fort Bonifacio", "Makati", "Ortigas", "Paranaque", "Alabang", "Mandaluyong"];
-    var ptypeArray = ["3+ Bedrooms Condo", "2 Bedrooms Condo", "House and Lot", "Office Space", "Studio/ 1 Bedroom Condo", "Townhouse", "Commercial Space", "Other"];
-    var rentorbuyArray = ["I want to Rent", "I want to buy"];
-    var rentprice = 'PHP 0 - 20,000 * PHP 21,000 - 35,000 * PHP 36,000 - 50,000 * PHP 51,000 - 75,000 * PHP 76,000 - 100,000 * PHP 101,000 - 150,000 * PHP 151,000 - 250,000 * PHP > 251,000';
-    var buyprice = 'PHP 0 - 2,000,000 * PHP 2,000,000 - 3,000,000 * PHP 3,000,000 - 5,000,000 * PHP 5,000,000 - 10,000,000 * PHP 10,000,000 - 20,000,000 * PHP > 50,000,000 * PHP 20,000,000 - 50,000,000';
-    var commonprice = "Undecided";
+      var countryArray = ["Philippines"];
+      var areaArray = ["Fort Bonifacio", "Makati", "Ortigas", "Paranaque", "Alabang", "Mandaluyong"];
+      var ptypeArray = ["3+ Bedrooms Condo", "2 Bedrooms Condo", "House and Lot", "Office Space", "Studio/ 1 Bedroom Condo", "Townhouse", "Commercial Space", "Other"];
+      var rentorbuyArray = ["I want to Rent", "I want to Buy"];
+      var rentprice = 'PHP 0 - 20,000 * PHP 21,000 - 35,000 * PHP 36,000 - 50,000 * PHP 51,000 - 75,000 * PHP 76,000 - 100,000 * PHP 101,000 - 150,000 * PHP 151,000 - 250,000 * PHP > 251,000';
+      var buyprice = 'PHP 0 - 2,000,000 * PHP 2,000,000 - 3,000,000 * PHP 3,000,000 - 5,000,000 * PHP 5,000,000 - 10,000,000 * PHP 10,000,000 - 20,000,000 * PHP > 50,000,000 * PHP 20,000,000 - 50,000,000';
+      var commonprice = "Undecided";
 
       var content = {
         country: countryArray,
@@ -51,61 +51,16 @@ function Request(req, cb) {
               if(req.payload.rentorbuy){
                 if(req.payload.budget){
 
-                  db.hgetall('hm-user.'+ req.payload.id, function(err, data){
-
-                    var fullname = data.first_name + " " + data.last_name;
-                    var photo = data.photo;
-                    var requestCreated = {
-                      requestid: randomstring.generate(8),
-                      clientid: req.payload.id,
-                      fullname: fullname,
-                      photo: photo,
-                      country: req.payload.country,
-                      area: req.payload.area,
-                      ptype: req.payload.ptype,
-                      rentorbuy: req.payload.rentorbuy,
-                      budget: req.payload.budget,
-                      add_info: req.payload.add_info,
-                      created: Date.now()
-                    }
-
-                    db.set("st-req."+req.payload.id, requestCreated.requestid);
-                    db.hmset("hm-req."+requestCreated.requestid, requestCreated);
-                    db.hgetall("hm-req."+requestCreated.requestid, function(err, data) {
-                      console.log("request data sent to brokers...");
-
-                      psubRequest(requestCreated.clientid, requestCreated.requestid, function(result){
-                        cb("broadcast", result);
-                      });
-
-                      pubLocation(data.id, data.area, data, function(count){
-                        cb("success", { content: data, brokercount: count })
-                      });
-                    });
+                  createRequest(req.payload, function(err, result){
+                    cb(status, result);
                   });
 
-                }else{
-                  cb("incomplete", { message: "No budget data." });
-                }
-              }else{
-                cb("incomplete", { message: "No rentorbuy data." });
-              }
-            }else{
-              // ptype
-              cb("incomplete", { message: "No property type data." });
-            }
-          }else{
-            // area
-            cb("incomplete", { message: "No area data." });
-          }
-        }else{
-          // country
-          cb("incomplete", { message: "No country data." });
-        }
-      }else{
-        // userid
-        cb("incomplete", { message: "No userid data." });
-      }
+                }else{ cb("incomplete", { message: "No budget data." }); }
+              }else{ cb("incomplete", { message: "No rentorbuy data." }); }
+            }else{ cb("incomplete", { message: "No property type data." }); }
+          }else{ cb("incomplete", { message: "No area data." }); }
+        }else{ cb("incomplete", { message: "No country data." }); }
+      }else{ cb("incomplete", { message: "No userid data." }); }
 
       break;
     case 'fetchrequest': // {"route": { "module":"request", "action": "fetchrequest" } , "payload": { "id": "userid"}}
