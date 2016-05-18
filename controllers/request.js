@@ -51,7 +51,7 @@ function Request(req, cb) {
               if(req.payload.rentorbuy){
                 if(req.payload.budget){
 
-                  createRequest(req.payload, function(err, result){
+                  createRequest(req.payload, function(status, result){
                     cb(status, result);
                   });
 

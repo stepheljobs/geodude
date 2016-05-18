@@ -2,6 +2,8 @@
 
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
+var psubRequest = require('../service/psubrequest');
+var pubLocation = require('../service/publocation');
 
 function CreateRequest(payload, cb) {
   var db = new Redis({port: 6379, host: '127.0.0.1'});
