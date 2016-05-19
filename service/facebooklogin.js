@@ -13,7 +13,7 @@ function FacebookLogin(payload, cb) {
       tokenid = payload.token,
       profile;
 
-  request.get('https://graph.facebook.com/me?fields=first_name,last_name,email,picture.type(large)&access_token='+ tokenid, function(err, request, fbinfo) {
+  request.get('https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture.type(large)&access_token='+ tokenid, function(err, request, fbinfo) {
     profile = JSON.parse(fbinfo);
     if (profile.error) {
       console.log('error: ', profile.error.message);
@@ -83,7 +83,7 @@ function FacebookLogin(payload, cb) {
             first_name: profile.first_name || '',
             last_name: profile.last_name || '',
             user_type: payload.user_type,
-            photo: profile.picture.data.url || ''
+            photo: "https://graph.facebook.com/"+ profile.id +"/picture?type=large" || ''
           }
 
           db.set("st-user."+profile.email, userProfile.id);
