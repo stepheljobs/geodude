@@ -15,12 +15,17 @@ function PubLocation(reqid, location, requestdetails, cb) {
   var count = 0;
   pub.keys('hm-user.*', function(err, listofusers) {
     listofusers.map(function(user, iter, total) {
-      pub.hgetall(user, function(err, details){
-        if(details.cover_areas === location){
-          count++;
+      pub.hgetall(user, function(err, details) {
+        if(details.cover_areas) {
+          var regexString = details.cover_areas.replace(",", "|");
+          var regex = new RegExp(regexString);
+          var isMatch = location.match(regex);
+            if(isMatch) {
+                count++;
+            }
         }
 
-        if(iter === total.length - 1){
+        if(iter === total.length - 1) {
           cb(count);
         }
       });
