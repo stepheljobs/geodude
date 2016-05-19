@@ -33,6 +33,7 @@ function ReSubscribe(payload, cb) {
           psubRequest(clientid, requestid, function(result){
             cb("broadcast", result);
           });
+          cb("success", "User is resubscribe again.");
         });
       }
 

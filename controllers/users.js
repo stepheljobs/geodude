@@ -4,6 +4,7 @@ var Redis = require('ioredis');
 var psubLocation = require('../service/psublocation');
 var myaccount = require('../service/myaccount');
 var reSubscribe = require('../service/resubscribe');
+var forgotPassword = require('../service/forgotpassword');
 
 function Users(req, cb){
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -45,6 +46,11 @@ function Users(req, cb){
       break;
     case 'resubscribe': // {"route": { "module":"user", "action": "resubscribe" } , "payload": { "userid": "userid", "user_type": "CLIENT" }}
         reSubscribe(req.payload, function(status, data) {
+          cb(status, data);
+        });
+      break;
+    case 'forgotpassword': // {"route": { "module":"user", "action": "forgotpassword" } , "payload": { "email": "email" }}
+        forgotPassword(req.payload, function(status, data) {
           cb(status, data);
         });
       break;
