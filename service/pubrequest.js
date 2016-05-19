@@ -5,7 +5,7 @@ var randomstring = require('randomstring');
 var psubrooms = require('../service/psubrooms');
 
 function PubRequest(data, cb) {
-
+    console.log('----------> send a broadcast to request. ');
     var pub = new Redis({ port: 6379, host: '127.0.0.1'});
     var clientid = data.clientid;
     var requestid = data.requestid;

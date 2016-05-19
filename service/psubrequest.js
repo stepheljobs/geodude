@@ -18,6 +18,7 @@ function PsubRequest(myid, myrequestid, callback) {
     console.log('sub pattern: ', pattern);
     console.log('sub channel: ', channel);
     console.log('sub message: ', message);
+    console.log('----------> receive a broadcast');
     callback(message);
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {

@@ -15,6 +15,7 @@ function PsubLocation(location, cb) {
     // console.log('sub pattern: ', pattern);
     // console.log('sub channel: ', channel);
     // console.log('sub message: ', message);
+    console.log('----------> receive a broadcast');
     cb(null, message);
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {

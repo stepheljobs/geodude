@@ -3,7 +3,7 @@
 var Redis = require('ioredis');
 
 function PubLocation(reqid, location, requestdetails, cb) {
-  console.log('location ---> ', location);
+  console.log('----------> send a broadcast to location: ', location);
   var pub = new Redis({port: 6379,host: '127.0.0.1'});
 
   var areaArray = location.split(",");

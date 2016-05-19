@@ -19,6 +19,7 @@ function PsubRooms(requestid, clientid, brokerid, callback) {
     console.log('PsubRooms pattern: ', pattern);
     console.log('PsubRooms channel: ', channel);
     console.log('PsubRooms message: ', message);
+    console.log('----------> receive a broadcast');
     callback(JSON.stringify(message));
   });
   sub.on('pmessageBuffer', function (pattern, channel, message) {
