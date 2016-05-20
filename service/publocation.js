@@ -21,7 +21,7 @@ function PubLocation(reqid, location, requestdetails, cb) {
     listofusers.map(function(user, iter, total) {
       pub.hgetall(user, function(err, details) {
         if(details.cover_areas) {
-          var regexString = details.cover_areas.replace(",", "|");
+          var regexString = details.cover_areas.replace(/,/g, "|");;
           var regex = new RegExp(regexString);
           var isMatch = location.match(regex);
             if(isMatch) {
