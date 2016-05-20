@@ -14,7 +14,7 @@ function SendMessage(roomid, message, userid, type, cb) {
           var chatformat = { message: message, from: userid, type: type, created: Date.now() }
           db.lpush(roomid, JSON.stringify(chatformat));
           //return a message to sender.
-          // cb('success', chatformat);
+          cb('success', chatformat);
           db.publish(roomid, JSON.stringify(chatformat)); //broadcast to client
 
         } else { cb('invalid', 'no usertype.') }
