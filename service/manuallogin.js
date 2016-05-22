@@ -41,7 +41,7 @@ function ManualLogin(payload, cb) {
                           cb("broadcast", brokerprofile);
                         });
                       }else{
-                        cb("success", { id: id, message: "User logged in", requestexist: false });
+                        cb("success", { id: userid, message: "User logged in", requestexist: false });
                       }
                     });
 

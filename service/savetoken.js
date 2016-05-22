@@ -60,12 +60,6 @@ function SaveToken(payload, cb){ //0bbce83aab7742398355b0deb1790039643697da8944b
         cb('success', 'user saved a new endpointArn');
       }
     });
-
-    // Send a simple String or data to the client
-    // iosApp.sendMessage(endpointArn, 'Hi There!', function(err, messageId) {
-    //   if(err) { throw err; }
-    //   console.log('Message sent, ID was: ' + messageId);
-    // });
   });
 
 }
