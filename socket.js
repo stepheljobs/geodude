@@ -8,6 +8,7 @@ var requestController = require('./controllers/request');
 var userController = require('./controllers/users');
 var matchController = require('./controllers/match');
 var chatController = require('./controllers/chat');
+var pushNotifController = require('./controllers/pnotif');
 
 function Socket(conn) {
   if (!conn) {
@@ -78,6 +79,19 @@ function Socket(conn) {
               break;
             case "chat":
               chatController(req, function(status,data){
+                if (status === "broadcast") {
+                  var bcast = { "broadcast" : { route: {"module": "chat", "action": "broadcast" }, "payload": JSON.parse(data) } }
+                  conn.write(JSON.stringify(bcast));
+                  console.log('match - broadcast: ', bcast);
+                }else{
+                  var response = { "response" : { "code": status, route: {"module": req.route.module, "action": req.route.action }, "payload": data } }
+                  console.log('response: ', JSON.stringify(response));
+                  conn.write(JSON.stringify(response));
+                }
+              });
+              break;
+            case "pushnotif":
+              pushNotifController(req, function(status,data){
                 if (status === "broadcast") {
                   var bcast = { "broadcast" : { route: {"module": "chat", "action": "broadcast" }, "payload": JSON.parse(data) } }
                   conn.write(JSON.stringify(bcast));
