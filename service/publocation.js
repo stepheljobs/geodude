@@ -1,6 +1,7 @@
 'use strict'
 
 var Redis = require('ioredis');
+var sendPushNotif = require('../service/sendpushnotif');
 
 function PubLocation(reqid, location, requestdetails, cb) {
 
@@ -17,6 +18,7 @@ function PubLocation(reqid, location, requestdetails, cb) {
 
   // callback for total count of match brokers
   var count = 0;
+  var brokerList = []
   pub.keys('hm-user.*', function(err, listofusers) {
     listofusers.map(function(user, iter, total) {
       pub.hgetall(user, function(err, details) {
@@ -25,12 +27,14 @@ function PubLocation(reqid, location, requestdetails, cb) {
           var regex = new RegExp(regexString);
           var isMatch = location.match(regex);
             if(isMatch) {
+                brokerList.push(details.id);
                 count++;
             }
         }
 
         if(iter === total.length - 1) {
           cb(count);
+          sendPushNotif(brokerList);
         }
       });
     });
