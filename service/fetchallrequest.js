@@ -15,32 +15,35 @@ function FetchAllRequest(blockrequest,cover_areas, cb) {
             var area = cover_areas.split(",");
             area.map(function(ca) {
               if(requestDetail.area.includes(ca)) {
-                console.log("match cover area: ", requestDetail);
+                console.log("1 match cover area: ", requestDetail);
                 sortedRequest.push(requestDetail);
 
-                if(iter === total.length - 1){
-                  console.log('');
+                setTimeout(function(){
                   cb(null,sortedRequest);
-                }
+                }, 2000);
+                // if(iter === total.length - 1){
+                //   cb(null,sortedRequest);
+                // }
               }
             });
           });
         } else {
           console.log("a request is blocked already by the broker: ", singleRequest);
         }
-
       } else {
         db.hgetall(singleRequest, function(err, requestDetail) {
           var area = cover_areas.split(",");
           area.map(function(ca) {
             if(requestDetail.area.includes(ca)) {
-              console.log("match cover area: ", requestDetail);
+              console.log("2 match cover area: ", requestDetail);
               sortedRequest.push(requestDetail);
 
-              if(iter === total.length - 1){
-                console.log('');
+              setTimeout(function(){
                 cb(null,sortedRequest);
-              }
+              }, 2000);
+              // if(iter === total.length - 1){
+              //   cb(null,sortedRequest);
+              // }
             }
           });
         });
