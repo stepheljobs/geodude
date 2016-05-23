@@ -3,6 +3,7 @@
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
 var sendMatchEmail = require('../util/sendmatchemail');
+var matchpushnotif = require('../service/matchpushnotif');
 function AcceptRequest(data, cb) {
 
     var redis = new Redis({ port: 6379, host: '127.0.0.1'});
@@ -26,6 +27,7 @@ function AcceptRequest(data, cb) {
 
       redis.hmset("hm-match."+requestid+"."+brokerid, matchdata);
       redis.publish(clientid+"."+requestid, JSON.stringify(matchdata));
+      matchpushnotif(clientid);
       cb("success", "I have it sent to client.");
 
       // email the client about the broker matched.

@@ -27,10 +27,10 @@ function SendPushNotif(brokerList){ //ARRAY
   });
 
   // Send a simple String or data to the client
-  brokerList.map(function(brokerid, iter, total){
-    db.hgetall('hm-user.'+brokerid, function(err, user){
+  brokerList.map(function(brokerid, iter, total) {
+    db.hgetall('hm-user.'+brokerid, function(err, user) {
       if(user.endpointArn) {
-        iosApp.sendMessage(user.endpointArn, 'You got a new request from Get.Place client', function(err, messageId) {
+        iosApp.sendMessage(user.endpointArn, 'A client request matches your listings.', function(err, messageId) {
           if(err) { throw err; }
           console.log('Request Message sent, ID was: ' + messageId);
         });
