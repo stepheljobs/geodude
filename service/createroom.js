@@ -38,8 +38,27 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
                 cb("success",chatroomdetails);
                 pubRooms(requestid,clientid,brokerid, chatroomdetails);
 
-                //deduct the credits to first message to client.
-                db.hgetall('hm-user.'+brokerid, function(err, broker){
+                // add to client archive_match
+                db.hgetall('hm-user.'+clientid,function(err, clientdata) {
+                  if(clientdata.id) {
+                      if(clientdata.archive_request){
+                        var MatchArray = clientdata.archive_request.split(",");
+                      }else{
+                        var MatchArray = [];
+                      }
+                      var newArchivedMatch = "hm-req."+requestid;
+                      MatchArray.push(newArchivedMatch);
+                      db.hmset('hm-user.'+clientid, { archive_match: MatchArray });
+                      // cb("You already blocked a request.");
+                      console.log('Client added the match to archive_match');
+                  } else {
+                    // cb("Broker id could not find.");
+                    console.log("Broker id could not find.");
+                  }
+                });
+
+                //deduct the credits to first message to broker.
+                db.hgetall('hm-user.'+brokerid, function(err, broker) {
                   var deductedcredits = {
                     credits: broker.credits - 1
                   }

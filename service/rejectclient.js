@@ -8,7 +8,7 @@ function RejectClient(payload, cb) {
   var brokerid = payload.brokerid;
   var requestid = payload.requestid;
 
-  db.hgetall('hm-user.'+brokerid,function(err, brokerdata){
+  db.hgetall('hm-user.'+brokerid,function(err, brokerdata) {
     if(brokerdata.id){
         if(brokerdata.archive_request){
           var BlockReqArray = brokerdata.archive_request.split(",");
@@ -25,7 +25,6 @@ function RejectClient(payload, cb) {
       cb("Broker id could not find.");
       console.log("Broker id could not find.");
     }
-
   });
 }
 
