@@ -26,45 +26,49 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
             db.lpush('chatroom.' + requestid +"."+ clientid +"."+ brokerid, JSON.stringify(chatformat));
 
             getRequestDetails(requestid, function(request) {
-              var chatroomdetails = {
-                chatroomid: chatroomid,
-                location: request.area,
-                budget: request.budget,
-                rentorbuy: request.rentorbuy,
-                propertytype: request.ptype,
-                addinfo: request.add_info,
-              }
-
+              db.hgetall('hm-user.'+brokerid,function(err, broker) {
+                var chatroomdetails = {
+                  chatroomid: chatroomid,
+                  broker_fullname: broker.first_name + ' ' + broker.last_name,
+                  broker_photo: broker.photo,
+                  location: request.area,
+                  budget: request.budget,
+                  rentorbuy: request.rentorbuy,
+                  propertytype: request.ptype,
+                  addinfo: request.add_info,
+                }
                 cb("success",chatroomdetails);
-                pubRooms(requestid,clientid,brokerid, chatroomdetails);
-
-                // add to client archive_match
-                db.hgetall('hm-user.'+clientid,function(err, clientdata) {
-                  if(clientdata.id) {
-                      if(clientdata.archive_request){
-                        var MatchArray = clientdata.archive_request.split(",");
-                      }else{
-                        var MatchArray = [];
-                      }
-                      var newArchivedMatch = "hm-req."+requestid;
-                      MatchArray.push(newArchivedMatch);
-                      db.hmset('hm-user.'+clientid, { archive_match: MatchArray });
-                      // cb("You already blocked a request.");
-                      console.log('Client added the match to archive_match');
-                  } else {
-                    // cb("Broker id could not find.");
-                    console.log("Broker id could not find.");
-                  }
-                });
-
-                //deduct the credits to first message to broker.
-                db.hgetall('hm-user.'+brokerid, function(err, broker) {
-                  var deductedcredits = {
-                    credits: broker.credits - 1
-                  }
-                  db.hmset('hm-user.'+brokerid, deductedcredits);
-                });
               });
+              pubRooms(requestid,clientid,brokerid, chatroomdetails);
+            });
+
+              // add to client archive_match
+              db.hgetall('hm-user.'+clientid,function(err, clientdata) {
+                if(clientdata.id) {
+                    if(clientdata.archive_request){
+                      var MatchArray = clientdata.archive_request.split(",");
+                    }else{
+                      var MatchArray = [];
+                    }
+                    var newArchivedMatch = "hm-req."+requestid;
+                    MatchArray.push(newArchivedMatch);
+                    db.hmset('hm-user.'+clientid, { archive_match: MatchArray });
+                    // cb("You already blocked a request.");
+                    console.log('Client added the match to archive_match');
+                } else {
+                  // cb("Broker id could not find.");
+                  console.log("Client id could not find.");
+                }
+              });
+
+              //deduct the credits to first message to broker.
+              db.hgetall('hm-user.'+brokerid, function(err, broker) {
+                var deductedcredits = {
+                  credits: broker.credits - 1
+                }
+                db.hmset('hm-user.'+brokerid, deductedcredits);
+              });
+
           }else{
             console.log('existing, create the room not valid.');
             cb("invalid","chatroom exist");
