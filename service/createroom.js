@@ -31,6 +31,7 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
                   chatroomid: chatroomid,
                   broker_fullname: broker.first_name + ' ' + broker.last_name,
                   broker_photo: broker.photo,
+                  brokerid: broker.id,
                   location: request.area,
                   budget: request.budget,
                   rentorbuy: request.rentorbuy,
