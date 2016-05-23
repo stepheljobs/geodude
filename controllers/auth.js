@@ -45,7 +45,8 @@ function Auth(req, cb) {
                   archive_request: [],
                   archive_match: [],
                   subscribed_rooms: [],
-                  photo: ''
+                  photo: '',
+                  credits: 50
                 }
 
                 db.get("st-user."+req.payload.email, function(err, id){

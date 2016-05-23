@@ -12,8 +12,8 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
       if (requestid) {
 
         var chatformat = {
-          message: "Hello thank you for helping me.",
-          from: clientid,
+          message: "Hi, I have just the right property for your request",
+          from: brokerid,
           type: "text",
           created: Date.now()
         }
@@ -25,17 +25,26 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
             console.log('no existing, create the room.');
             db.lpush('chatroom.' + requestid +"."+ clientid +"."+ brokerid, JSON.stringify(chatformat));
 
-              getRequestDetails(requestid, function(request){
-                var chatroomdetails = {
-                  chatroomid: chatroomid,
-                  location: request.area,
-                  budget: request.budget,
-                  rentorbuy: request.rentorbuy,
-                  propertytype: request.ptype,
-                  addinfo: request.add_info,
-                }
+            getRequestDetails(requestid, function(request) {
+              var chatroomdetails = {
+                chatroomid: chatroomid,
+                location: request.area,
+                budget: request.budget,
+                rentorbuy: request.rentorbuy,
+                propertytype: request.ptype,
+                addinfo: request.add_info,
+              }
+
                 cb("success",chatroomdetails);
                 pubRooms(requestid,clientid,brokerid, chatroomdetails);
+
+                //deduct the credits to first message to client.
+                db.hgetall('hm-user.'+brokerid, function(err, broker){
+                  var deductedcredits = {
+                    credits: broker.credits - 1
+                  }
+                  db.hmset('hm-user.'+brokerid, deductedcredits);
+                });
               });
           }else{
             console.log('existing, create the room not valid.');

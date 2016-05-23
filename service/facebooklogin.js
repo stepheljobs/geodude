@@ -83,7 +83,8 @@ function FacebookLogin(payload, cb) {
             first_name: profile.first_name || '',
             last_name: profile.last_name || '',
             user_type: payload.user_type,
-            photo: "https://graph.facebook.com/"+ profile.id +"/picture?type=large" || ''
+            photo: "https://graph.facebook.com/"+ profile.id +"/picture?type=large" || '',
+            credits: 50
           }
 
           db.set("st-user."+profile.email, userProfile.id);
