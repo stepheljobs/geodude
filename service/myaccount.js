@@ -7,20 +7,21 @@ function MyAccount(userid, cb) {
 
   if(userid){
     db.hgetall('hm-user.'+userid, function(err, userprofile){
-      var User = {
-        id: userprofile.id,
-        member_since: userprofile.member_since,
-        email: userprofile.email,
-        first_name: userprofile.first_name,
-        last_name: userprofile.last_name,
-        user_type: userprofile.user_type,
-        archive_request: userprofile.archive_request,
-        archive_match: userprofile.archive_match,
-        subscribed_rooms: userprofile.subscribed_rooms,
-        photo: userprofile.photo,
-        latest_request: userprofile.latest_request || ''
-      }
-      cb(null, User);
+      delete userprofile.password;
+      // var User = {
+      //   id: userprofile.id,
+      //   member_since: userprofile.member_since,
+      //   email: userprofile.email,
+      //   first_name: userprofile.first_name,
+      //   last_name: userprofile.last_name,
+      //   user_type: userprofile.user_type,
+      //   archive_request: userprofile.archive_request,
+      //   archive_match: userprofile.archive_match,
+      //   subscribed_rooms: userprofile.subscribed_rooms,
+      //   photo: userprofile.photo,
+      //   latest_request: userprofile.latest_request || ''
+      // }
+      cb(null, userprofile);
     });
   }else{
     cb(null, "No Userid");
