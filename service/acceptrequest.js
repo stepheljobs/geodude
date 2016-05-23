@@ -30,6 +30,16 @@ function AcceptRequest(data, cb) {
       matchpushnotif(clientid);
       cb("success", "I have it sent to client.");
 
+      // add the request to archive_request
+      if(brokerprofile.archive_request){
+        var BlockReqArray = brokerprofile.archive_request.split(",");
+      }else{
+        var BlockReqArray = [];
+      }
+      var newBlockReq = "hm-req."+requestid;
+      BlockReqArray.push(newBlockReq);
+      redis.hmset('hm-user.'+brokerid, { archive_request: BlockReqArray });
+
       // email the client about the broker matched.
       redis.hgetall("hm-user."+clientid, function(err, clientprofile) {
         sendMatchEmail(clientprofile.email);

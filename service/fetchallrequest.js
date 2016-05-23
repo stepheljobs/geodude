@@ -2,15 +2,15 @@
 
 var Redis = require('ioredis');
 
-function FetchAllRequest(blockrequest,cover_areas, cb) {
+function FetchAllRequest(archive_request,cover_areas, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
   var sortedRequest = [];
   db.keys('hm-req.????????', function(err, requests) {
 
     requests.map(function(singleRequest, iter, total) {
 
-      if (blockrequest) {
-        if(!blockrequest.includes(singleRequest)){
+      if (archive_request) {
+        if(!archive_request.includes(singleRequest)){
           db.hgetall(singleRequest, function(err, requestDetail) {
             var area = cover_areas.split(",");
             area.map(function(ca) {

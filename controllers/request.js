@@ -86,8 +86,8 @@ function Request(req, cb) {
       if(req.payload.brokerid){
         var brokerid = req.payload.brokerid;
         db.hgetall("hm-user."+brokerid, function(err, data) {
-          if(data.cover_areas){
-            fetchAllRequest(data.blockrequest,data.cover_areas, function(err, listofrequest){ //this will fetch all the request match to cover_areas
+          if(data.cover_areas) {
+            fetchAllRequest(data.archive_request,data.cover_areas, function(err, listofrequest){ //this will fetch all the request match to cover_areas
               cb("success", listofrequest );
             });
           }else{

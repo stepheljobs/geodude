@@ -9,12 +9,9 @@ function RejectClient(payload, cb) {
   var requestid = payload.requestid;
 
   db.hgetall('hm-user.'+brokerid,function(err, brokerdata){
-    // {"id":"15WaQywp","member_since":"1462807370500","email":"broker2@gmail.com","password":"$2a$10$thnVaZnFLRXruvfIajjrx.PL4YRjnazAGm3F6gT9WNp9aL6J9Trvi","first_name":"broker2","last_name":"broker2","user_type":"BROKER","photo":"","working_email":"sbroker2@gmail.com","contact_number":"09054866990","brokerlisc":"12345","yrexam":"2006","cover_areas":"Paranaque"}
-
     if(brokerdata.id){
-
-        if(brokerdata.blockrequest){
-          var BlockReqArray = brokerdata.blockrequest.split(",");
+        if(brokerdata.archive_request){
+          var BlockReqArray = brokerdata.archive_request.split(",");
         }else{
           var BlockReqArray = [];
         }
@@ -22,7 +19,7 @@ function RejectClient(payload, cb) {
         var newBlockReq = "hm-req."+requestid;
         BlockReqArray.push(newBlockReq);
 
-        db.hmset('hm-user.'+brokerid, { blockrequest: BlockReqArray });
+        db.hmset('hm-user.'+brokerid, { archive_request: BlockReqArray });
         cb("You already blocked a request.");
     } else {
       cb("Broker id could not find.");
