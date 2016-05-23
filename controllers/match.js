@@ -6,6 +6,7 @@ var rejectClient = require('../service/rejectclient');
 var fetchAllMatch = require('../service/fetchallmatch');
 var acceptRequest = require('../service/acceptrequest');
 var psubrooms = require('../service/psubrooms');
+var rejectMatch = require('../service/rejectmatch');
 
 function Match(req, cb) {
   var db = new Redis({port: 6379,host: '127.0.0.1'});
@@ -52,6 +53,12 @@ function Match(req, cb) {
           } else {
             cb("error", "No response.");
           }
+        });
+      break;
+    case 'rejectmatch':
+        rejectMatch(req.payload, function(status, result) {
+          console.log('fetchAllMatch: ', result);
+          cb(status, result);
         });
       break;
     default:
