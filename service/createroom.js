@@ -38,8 +38,8 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
                   addinfo: request.add_info,
                 }
                 cb("success",chatroomdetails);
+                pubRooms(requestid,clientid,brokerid, chatroomdetails);
               });
-              pubRooms(requestid,clientid,brokerid, chatroomdetails);
             });
 
               // add to client archive_match
