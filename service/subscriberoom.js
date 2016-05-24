@@ -1,7 +1,7 @@
 'use strict'
 
 var Redis = require('ioredis');
-var validateMessage   = require('../util/validatemessage');
+var validateMessage   = require('../util/validatemessages');
 
 function SubscribeRoom(roomid, cb) {
 
