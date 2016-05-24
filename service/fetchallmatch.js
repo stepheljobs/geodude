@@ -8,20 +8,21 @@ function FetchAllMatch(clientid, cb) {
 
   var db = new Redis({port: 6379, host: '127.0.0.1'});
   var archivedMatch, listofMatch, newList;
-  var requestid, finalList = [];
+  var requestId, finalList = [];
 
   async.series({
       one: function(callback){
         db.get("st-req."+clientid, function(err, requestid){
-          requestid = requestid;
-          console.log('requestid -----> fetching all match... > requestid', requestid);
+          requestId = requestid;
+          console.log('requestid -----> fetching all match... > requestid', requestId);
           setTimeout(function(){
             callback(null, 1);
           },100);
         });
       },
       two: function(callback){
-        db.keys('hm-match.'+requestid+'.*', function(err, arrayofmatch) {
+        console.log(' >>>> requestId: ', requestId);
+        db.keys('hm-match.'+requestId+'.*', function(err, arrayofmatch) {
           listofMatch = arrayofmatch;
           console.log('listofMatch -----> fetching all match... > listofMatch', listofMatch);
           setTimeout(function(){
