@@ -37,10 +37,10 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
       var clientId = temp[2];
       console.log("temp: ", temp);
       console.log('clientId: ', clientId);
-      db.hgetall('hm-user.'+clientId, function(err, userdata){
+      db.hgetall('hm-user.'+clientId, function(err, userdata) {
         if(userdata.endpointArn) {
-          console.log('>>> user.endpointArn: ', user.endpointArn);
-          iosApp.sendMessage(user.endpointArn, 'A broker send you a message.', function(err, messageId) {
+          console.log('>>> userdata.endpointArn: ', userdata.endpointArn);
+          iosApp.sendMessage(userdata.endpointArn, 'A broker send you a message.', function(err, messageId) {
             if(err) { throw err; }
             console.log('Request Message sent, ID was: ' + messageId);
           });
@@ -68,8 +68,8 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
       console.log('brokerId: ', brokerId);
       db.hgetall('hm-user.'+brokerId, function(err, userdata){
         if(userdata.endpointArn) {
-          console.log('>>> user.endpointArn: ', user.endpointArn);
-          iosApp.sendMessage(user.endpointArn, 'A client send you a message.', function(err, messageId) {
+          console.log('>>> userdata.endpointArn: ', userdata.endpointArn);
+          iosApp.sendMessage(userdata.endpointArn, 'A client send you a message.', function(err, messageId) {
             if(err) { throw err; }
             console.log('Request Message sent, ID was: ' + messageId);
           });
