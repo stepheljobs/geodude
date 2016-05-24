@@ -35,7 +35,8 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
       //then send to client the message.
       var temp = roomid.split('.');
       var clientId = temp[3];
-      console.log(temp);
+      console.log("temp: ", temp);
+      console.log('clientId: ', clientId);
       db.hgetall('hm-user.'+clientId, function(err, userdata){
         if(userdata.endpointArn) {
           console.log('>>> user.endpointArn: ', user.endpointArn);
@@ -63,7 +64,8 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
       //then send to client the message.
       var temp = roomid.split('.');
       var brokerId = temp[2];
-      console.log(temp);
+      console.log("temp: ", temp);
+      console.log('brokerId: ', brokerId);
       db.hgetall('hm-user.'+brokerId, function(err, userdata){
         if(userdata.endpointArn) {
           console.log('>>> user.endpointArn: ', user.endpointArn);
