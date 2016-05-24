@@ -18,8 +18,11 @@ function SubscribeRoom(roomid, cb) {
       console.log('sub pattern: ', pattern);
       console.log('sub channel: ', channel);
       console.log('sub message: ', newmessage);
-      sub.lrange(channel, 0, -1, function (err, allmessages) {
-        allmessages.map(function(oldmsg, iter, total) {
+      var min = 0, max = -1;
+      console.log('>> pattern: ', pattern);
+      sub.lrange(pattern, min, max, function (err, messages) {
+        console.log('>> messages: ', messages);
+        messages.map(function(oldmsg, iter, total) {
           console.log('>> newmessage: ', newmessage);
           console.log('>> oldmsg: ', oldmsg);
           if(oldmsg != newmessage){
