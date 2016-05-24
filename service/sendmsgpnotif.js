@@ -18,7 +18,7 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
 
   var db = new Redis({port: 6379,host: '127.0.0.1'});
   var userId = chatformat.from;
-  db.hgetall('hm-user.'+userid, function(err, user) {
+  db.hgetall('hm-user.'+userId, function(err, user) {
 
     if(user.user_type === 'BROKER') {
       // if client. set the broker arn
@@ -65,7 +65,7 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
 
       db.hgetall('hm-user.'+brokerId, function(err, userdata){
         if(userdata.endpointArn) {
-          iosApp.sendMessage(user.endpointArn, 'A broker send you a message.', function(err, messageId) {
+          iosApp.sendMessage(user.endpointArn, 'A client send you a message.', function(err, messageId) {
             if(err) { throw err; }
             console.log('Request Message sent, ID was: ' + messageId);
           });
