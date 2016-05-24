@@ -2,7 +2,7 @@
 
 var Redis = require('ioredis');
 var randomstring = require('randomstring');
-var psubrooms = require('../service/psubrooms');
+// var psubrooms = require('../service/psubrooms');
 
 function PubRequest(data, cb) {
     console.log('----------> send a broadcast to request. ');
@@ -27,9 +27,9 @@ function PubRequest(data, cb) {
 
     pub.hmset("hm-match."+requestid+"."+brokerid, matchdata);
 
-    psubrooms(requestid,clientid,brokerid, function(result){
-        cb("broadcast", JSON.parse(result));
-    });
+    // psubrooms(requestid,clientid,brokerid, function(result){
+    //     cb("broadcast", JSON.parse(result));
+    // });
 
     pub.publish(clientid+"."+requestid, JSON.stringify(brokerprofile)); //broadcast to client
     cb("success", "I have it sent to client.");
