@@ -25,7 +25,7 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
       var iosApp = new SNS({
         platform: SNS.SUPPORTED_PLATFORMS.IOS,
         region: 'ap-southeast-1',
-        apiVersion: '2010-03-31',
+        apiVersion: '2012-10-17',
         accessKeyId: SNS_ACCESS_KEY,
         secretAccessKey: SNS_KEY_ID,
         platformApplicationArn: IOS_CLIENT_ARN,
@@ -54,7 +54,7 @@ function SendMsgPNotif(chatformat, roomid){ //ARRAY
       var iosApp = new SNS({
         platform: SNS.SUPPORTED_PLATFORMS.IOS,
         region: 'ap-southeast-1',
-        apiVersion: '2010-03-31',
+        apiVersion: '2012-10-17',
         accessKeyId: SNS_ACCESS_KEY,
         secretAccessKey: SNS_KEY_ID,
         platformApplicationArn: IOS_BROKER_ARN,
