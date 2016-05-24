@@ -58,9 +58,10 @@ function FetchAllMatch(clientid, cb) {
               finalList.push(matchDetail);
 
               console.log('n: ', n);
-              console.log('totalarray: ', totalarray);
-              if(n === totalarray) {
+              console.log('totalarray: ', totalarray -1);
+              if(n === totalarray -1) {
                 console.log('result -----> fetching all match... > finalList', finalList);
+                cb(null,finalList);
               } else {
                 n++;
               }
