@@ -21,7 +21,7 @@ function FetchAllRequest(payload, cb) {
 
           if(data.cover_areas) {
             broker_cover_areas = data.cover_areas;
-            // console.log('---> broker_cover_areas: ', broker_cover_areas);
+            console.log('---> broker_cover_areas: ', broker_cover_areas);
             setTimeout(function(){
               callback(null, 1);
             },100);
@@ -33,7 +33,7 @@ function FetchAllRequest(payload, cb) {
       two: function(callback) {
         db.keys('hm-req.????????', function(err, requestlist) {
           allrequest = requestlist;
-          // console.log('---> allrequest: ', allrequest);
+          console.log('---> allrequest: ', allrequest);
           setTimeout(function(){
             callback(null, 1);
           },100);
@@ -41,33 +41,33 @@ function FetchAllRequest(payload, cb) {
       },
       three: function(callback) {
         sortedRequest = lazy(allrequest).without(broker_archive_req).value();
-        // console.log('---> sortedRequest: ', sortedRequest);
+        console.log('---> sortedRequest: ', sortedRequest);
         setTimeout(function(){
           callback(null, 1);
         },100);
       },
-      fourth: function(cback) {
-        // console.log('---> sortedRequest2: ', sortedRequest);
+      fourth: function(callback) {
+        console.log('---> sortedRequest2: ', sortedRequest);
         sortedRequest.map(function(n, i, t){
           db.hgetall(n, function(err, reqdetail){
             var bca = lazy(broker_cover_areas).split(",").value();
 
             async.series({
-              matchingarea: function(callback) {
+              matchingarea: function(cback) {
                 bca.map(function(ca) {
                   if(reqdetail.area.includes(ca)) {
                     console.log("match: ", reqdetail);
                     finalList.push(reqdetail);
                   }
                   setTimeout(function(){
-                    callback(null, 1);
+                    cback(null, 1);
                   },100);
                 });
               },
-              checkiteration: function(callback) {
+              checkiteration: function(cback) {
                 if(i === t.length -1) {
                   setTimeout(function() {
-                    cback(null, 1); //end of fourth series
+                    callback(null, 1); //end of fourth series.
                   },100);
                 }
               }
