@@ -12,7 +12,7 @@ function ValidateMessage(channel,newmessage, cb) {
   db.lrange(channel, min, max, function (err, messages) {
     console.log('---> messages: ', messages);
     nwMsg.push(newmessage);
-    var isDuplcated = lazy(messages).contains(nwMsg).value();
+    var isDuplcated = lazy(messages).contains(nwMsg);
     console.log('---> isDuplcated', isDuplcated);
     setTimeout(function(){
       if(!isDuplcated) {
