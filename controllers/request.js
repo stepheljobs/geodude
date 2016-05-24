@@ -81,24 +81,12 @@ function Request(req, cb) {
       }
 
       break;
-    case 'fetchallrequest': //use by broker only
-
+    case 'fetchallrequest':
       if(req.payload.brokerid){
-        var brokerid = req.payload.brokerid;
-        db.hgetall("hm-user."+brokerid, function(err, data) {
-          if(data.cover_areas) {
-            fetchAllRequest(data.archive_request,data.cover_areas, function(err, listofrequest){ //this will fetch all the request match to cover_areas
-              cb("success", listofrequest );
-            });
-          }else{
-            // call back no cover areas.
-            cb("invalid", { message: "No cover areas" });
-          }
+        fetchAllRequest(req.payload, function(status, listofrequest){ //this will fetch all the request match to cover_areas
+          cb(status, listofrequest );
         });
-      }else{
-        cb("invalid", { message: "No broker id" });
-      }
-
+      }else{ cb("invalid", { message: "No broker id" }); }
       break;
 
     case 'fetchdetails':
