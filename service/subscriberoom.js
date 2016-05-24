@@ -14,11 +14,20 @@ function SubscribeRoom(roomid, cb) {
       cb('success', 'User is now subscribed to room '+ roomid);
     });
 
-    sub.on('pmessage', function (pattern, channel, message) {
-      console.log('sub pattern: ', pattern);
-      console.log('sub channel: ', channel);
-      console.log('sub message: ', message);
-      cb('broadcast', message);
+    sub.on('pmessage', function (pattern, channel, newmessage) {
+      // console.log('sub pattern: ', pattern);
+      // console.log('sub channel: ', channel);
+      // console.log('sub message: ', newmessage);
+      sub.lrange(roomid, 0, -1, function (err, allmessages) {
+        allmessages.map(function(oldmsg, iter, total) {
+          console.log('>> newmessage: ', newmessage);
+          console.log('>> oldmsg: ', oldmsg);
+          if(oldmsg != newmessage){
+            cb('broadcast', newmessage);
+          }
+        });
+      });
+
     });
 
     sub.on('pmessageBuffer', function (pattern, channel, message) {
