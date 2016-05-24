@@ -18,9 +18,10 @@ function SubscribeRoom(roomid, cb) {
       console.log('sub pattern: ', pattern);
       console.log('sub channel: ', channel);
       console.log('sub message: ', newmessage);
+      cb('broadcast', newmessage);
       var min = 0, max = -1;
       console.log('>> pattern: ', pattern);
-      sub.lrange(pattern, min, max, function (err, messages) {
+      sub.lrange("chatroom.d4i6PoMI.s0MLetBH.PQjAWXCS", min, max, function (err, messages) {
         console.log('>> messages: ', messages);
         messages.map(function(oldmsg, iter, total) {
           console.log('>> newmessage: ', newmessage);
