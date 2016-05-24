@@ -1,6 +1,7 @@
 'use strict'
 
 var Redis = require('ioredis');
+var validateMessage   = require('../util/validatemessage');
 
 function SubscribeRoom(roomid, cb) {
 
@@ -18,20 +19,10 @@ function SubscribeRoom(roomid, cb) {
       console.log('sub pattern: ', pattern);
       console.log('sub channel: ', channel);
       console.log('sub message: ', newmessage);
-      cb('broadcast', newmessage);
-      var min = 0, max = -1;
-      console.log('>> pattern: ', pattern);
-      sub.lrange("chatroom.d4i6PoMI.s0MLetBH.PQjAWXCS", min, max, function (err, messages) {
-        console.log('>> messages: ', messages);
-        messages.map(function(oldmsg, iter, total) {
-          console.log('>> newmessage: ', newmessage);
-          console.log('>> oldmsg: ', oldmsg);
-          if(oldmsg != newmessage){
-            cb('broadcast', newmessage);
-          }
-        });
+      // cb('broadcast', newmessage);
+      validateMessage(channel,newmessage, function(result){
+        cb('broadcast', result);
       });
-
     });
 
     sub.on('pmessageBuffer', function (pattern, channel, message) {
