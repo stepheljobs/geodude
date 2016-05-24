@@ -1,7 +1,6 @@
 'use strict'
 
 var Redis = require('ioredis');
-var validateMessage   = require('../util/validatemessages');
 
 function SubscribeRoom(roomid, cb) {
 
@@ -19,10 +18,7 @@ function SubscribeRoom(roomid, cb) {
       console.log('sub pattern: ', pattern);
       console.log('sub channel: ', channel);
       console.log('sub message: ', newmessage);
-      // cb('broadcast', newmessage);
-      validateMessage(channel,newmessage, function(result){
-        cb('broadcast', result);
-      });
+      cb('broadcast', newmessage);
     });
 
     sub.on('pmessageBuffer', function (pattern, channel, message) {
