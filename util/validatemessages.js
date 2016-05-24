@@ -1,16 +1,18 @@
 'use strict'
 var Redis = require('ioredis');
-var lazy = require('lazy.js');
+var lazy = require("lazy.js");
 
 function ValidateMessage(channel,newmessage, cb) {
 
   var db = new Redis({port: 6379, host: '127.0.0.1'});
   var min = 0, max = -1;
   var isDuplcated = false;
+  var nwMsg = [];
 
   db.lrange(channel, min, max, function (err, messages) {
     console.log('---> messages: ', messages);
-    var isDuplcated = lazy(messages).contains(newmessage).value();
+    nwMsg.push(newmessage);
+    var isDuplcated = lazy(messages).contains(nwMsg).value();
     console.log('---> isDuplcated', isDuplcated);
     setTimeout(function(){
       if(!isDuplcated) {
