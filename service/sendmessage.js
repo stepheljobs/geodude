@@ -1,6 +1,7 @@
 'use strict'
 
 var Redis = require('ioredis');
+var sendMsgPNotif = require('../service/sendmsgpnotif');
 
 function SendMessage(roomid, message, userid, type, cb) {
 
@@ -19,6 +20,7 @@ function SendMessage(roomid, message, userid, type, cb) {
               cb('success', chatformat);
               console.log('-------> publish > sendmessage');
               db.publish(roomid, JSON.stringify(chatformat)); //broadcast to client
+              sendMsgPNotif(chatformat, roomid);
             }else{
               cb('invalid', 'your token is already 0');
             }
