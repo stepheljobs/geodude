@@ -54,14 +54,18 @@ function FetchAllRequest(payload, cb) {
 
             async.series({
               matchingarea: function(cback) {
-                bca.map(function(ca) {
+                bca.map(function(ca, it, to) {
                   if(reqdetail.area.includes(ca)) {
                     console.log("match: ", reqdetail);
                     finalList.push(reqdetail);
                   }
-                  setTimeout(function(){
-                    cback(null, 1);
-                  },100);
+
+                  if(it === to.length -1) {
+                    setTimeout(function(){
+                      cback(null, 1);
+                    },100);
+                  }
+
                 });
               },
               checkiteration: function(cback) {
