@@ -17,6 +17,7 @@ function SendMessage(roomid, message, userid, type, cb) {
               db.lpush(roomid, JSON.stringify(chatformat));
               //return a message to sender.
               cb('success', chatformat);
+              console.log('-------> publish > sendmessage');
               db.publish(roomid, JSON.stringify(chatformat)); //broadcast to client
             }else{
               cb('invalid', 'your token is already 0');
