@@ -15,10 +15,10 @@ function SubscribeRoom(roomid, cb) {
     });
 
     sub.on('pmessage', function (pattern, channel, newmessage) {
-      // console.log('sub pattern: ', pattern);
-      // console.log('sub channel: ', channel);
-      // console.log('sub message: ', newmessage);
-      sub.lrange(roomid, 0, -1, function (err, allmessages) {
+      console.log('sub pattern: ', pattern);
+      console.log('sub channel: ', channel);
+      console.log('sub message: ', newmessage);
+      sub.lrange(channel, 0, -1, function (err, allmessages) {
         allmessages.map(function(oldmsg, iter, total) {
           console.log('>> newmessage: ', newmessage);
           console.log('>> oldmsg: ', oldmsg);
