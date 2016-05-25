@@ -31,7 +31,7 @@ function SendPushNotif(brokerList){ //ARRAY
     db.hgetall('hm-user.'+brokerid, function(err, user) {
       if(user.endpointArn) {
         console.log('----> brokerid: ', brokerid);
-        console.log('----> endpointArn: ', endpointArn);
+        console.log('----> endpointArn: ', user.endpointArn);
         iosApp.sendMessage(user.endpointArn, 'A client request matches your listings.', function(err, messageId) {
           if(err) { throw err; }
           console.log('Request Message sent, ID was: ' + messageId);
