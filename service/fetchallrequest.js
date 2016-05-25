@@ -16,7 +16,7 @@ function FetchAllRequest(payload, cb) {
         db.hgetall("hm-user."+brokerid, function(err, data) {
 
           if(data.archive_request) {
-            broker_archive_req = data.archive_request;
+            broker_archive_req = lazy(data.archive_request).split(",").value();
             console.log('---> broker_archive_req: ', broker_archive_req);
           }
 
