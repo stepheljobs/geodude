@@ -19,12 +19,14 @@ function RejectMatch(payload, cb) {
         var newBlockMatch = "hm-match."+matchid;
         BlockMatchArray.push(newBlockMatch);
 
-        db.hmset('hm-user.'+brokerid, { archive_match: BlockMatchArray });
-        // cb("You already blocked a request.");
-        console.log("You blocked the match before");
+        db.hmset('hm-user.'+ clientid, { archive_match: BlockMatchArray });
+        cb("success", "You now blocked a match.");
+
+        var message = "A clientid: " + clientid + " blocked a matchid: " + newBlockMatch;
+        console.log(message);
     } else {
-      // cb("Broker id could not find.");
       console.log("Client id could not find.");
+      cb("incomplete", "Client id could not find.");
     }
   });
 }

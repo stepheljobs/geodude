@@ -44,20 +44,20 @@ function CreateRoom(requestid, clientid, brokerid, cb) {
             });
 
               // add to client archive_match
-              db.hgetall('hm-user.'+clientid,function(err, clientdata) {
+              db.hgetall('hm-user.'+ clientid,function(err, clientdata) {
                 if(clientdata.id) {
-                    if(clientdata.archive_request){
-                      var MatchArray = clientdata.archive_request.split(",");
+                    if(clientdata.archive_match){
+                      var MatchArray = clientdata.archive_match.split(",");
                     }else{
                       var MatchArray = [];
                     }
-                    var newArchivedMatch = "hm-req."+requestid;
+                    var newArchivedMatch = "hm-match."+requestid+"."+brokerid;
                     MatchArray.push(newArchivedMatch);
                     db.hmset('hm-user.'+clientid, { archive_match: MatchArray });
-                    // cb("You already blocked a request.");
-                    console.log('Client added the match to archive_match');
+
+                    var matchmsg = 'Clientid: '+ clientid +' added the matchid: '+ newArchivedMatch +' to archive_match';
+                    console.log(matchmsg);
                 } else {
-                  // cb("Broker id could not find.");
                   console.log("Client id could not find.");
                 }
               });
