@@ -12,7 +12,7 @@ function FetchAllMatch(clientid, cb) {
   var requestId, finalList = [];
 
   async.series({
-      one: function(callback){
+      one: function(callback) {
         db.get("st-req."+clientid, function(err, requestid){
           requestId = requestid;
           console.log('requestid -----> fetching all match... > requestid', requestId);
@@ -21,7 +21,7 @@ function FetchAllMatch(clientid, cb) {
           },100);
         });
       },
-      two: function(callback){
+      two: function(callback) {
         db.keys('hm-match.'+requestId+'.*', function(err, arrayofmatch) {
           listofMatch = arrayofmatch;
           console.log('listofMatch -----> fetching all match... > listofMatch', listofMatch);
@@ -30,10 +30,10 @@ function FetchAllMatch(clientid, cb) {
           },100);
         });
       },
-      three: function(callback){
+      three: function(callback) {
         db.hgetall('hm-user.'+clientid, function(err, clientdata) {
-          archivedMatch = lazy(clientdata.archive_match).split(",").value();
           console.log('archivedMatch -----> fetching all match... > archivedMatch', clientdata.archive_match);
+          archivedMatch = lazy(clientdata.archive_match).split(",").value();
           setTimeout(function(){
             callback(null, 1);
           },100);
