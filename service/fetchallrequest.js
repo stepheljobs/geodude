@@ -26,8 +26,8 @@ function FetchAllRequest(payload, cb) {
             setTimeout(function(){
               callback(null, 1);
             },100);
-          }else{
-            cb("invalid", { message: "No cover areas" });
+          } else {
+            cb("succes", { message: "No cover areas" });
           }
         });
       },
