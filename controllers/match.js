@@ -1,7 +1,7 @@
 'use strict';
 
 var Redis = require('ioredis');
-// var pubRequest = require('../service/pubrequest');
+
 var rejectClient = require('../service/rejectclient');
 var fetchAllMatch = require('../service/fetchallmatch');
 var acceptRequest = require('../service/acceptrequest');

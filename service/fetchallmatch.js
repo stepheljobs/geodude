@@ -3,6 +3,7 @@
 var Redis = require('ioredis');
 var async = require("async");
 var _ = require("underscore");
+var lazy = require("lazy.js");
 
 function FetchAllMatch(clientid, cb) {
 
@@ -31,7 +32,7 @@ function FetchAllMatch(clientid, cb) {
       },
       three: function(callback){
         db.hgetall('hm-user.'+clientid, function(err, clientdata) {
-          archivedMatch = clientdata.archive_match;
+          archivedMatch = lazy(clientdata.archive_match).split(",").value();
           console.log('archivedMatch -----> fetching all match... > archivedMatch', clientdata.archive_match);
           setTimeout(function(){
             callback(null, 1);
@@ -39,7 +40,7 @@ function FetchAllMatch(clientid, cb) {
         });
       },
       four: function(callback){
-        newList = _.difference(listofMatch, archivedMatch);
+        newList = lazy(listofMatch).without(archivedMatch).value();
         console.log('underscore -----> fetching all match... > newList', newList);
         setTimeout(function(){
           callback(null, 1);
