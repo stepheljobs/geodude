@@ -21,7 +21,7 @@ function FacebookLogin(payload, cb) {
 
     } else {
       // check if there is email connected to id number
-      db.get("st-user." + profile.email, function(err, useridexist) {
+      db.get("st-user." + profile.id, function(err, useridexist) {
         if(useridexist) {
           db.hgetall("hm-user."+useridexist, function(err, user) {
             console.log('user: ', JSON.stringify(user));
@@ -87,7 +87,7 @@ function FacebookLogin(payload, cb) {
             credits: 50
           }
 
-          db.set("st-user."+profile.email, userProfile.id);
+          db.set("st-user."+profile.id, userProfile.id);
           db.hmset("hm-user."+userProfile.id, userProfile);
 
           //check if registered.
