@@ -83,6 +83,9 @@ function FacebookLogin(payload, cb) {
             first_name: profile.first_name || '',
             last_name: profile.last_name || '',
             user_type: payload.user_type,
+            archive_match: [],
+            archive_request: [],
+            subscribed_rooms: [],
             photo: "https://graph.facebook.com/"+ profile.id +"/picture?type=large" || '',
             credits: 50
           }
